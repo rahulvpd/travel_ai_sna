@@ -1,156 +1,277 @@
 import { useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Star, Shield, Users, ArrowRight, Camera, Sun, Umbrella } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Search, MapPin, Shield } from 'lucide-react';
-import { DISTRICTS } from '../data/districts';
-import ImageWithFallback from '../components/ui/ImageWithFallback';
-
-// 3D Tilt Card Component
-const TiltCard = ({ children, className }) => {
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-
-    const mouseX = useSpring(x, { stiffness: 500, damping: 30 });
-    const mouseY = useSpring(y, { stiffness: 500, damping: 30 });
-
-    const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"]);
-    const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"]);
-
-    const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const xPct = mouseX / width - 0.5;
-        const yPct = mouseY / height - 0.5;
-        x.set(xPct);
-        y.set(yPct);
-    };
-
-    const handleMouseLeave = () => {
-        x.set(0);
-        y.set(0);
-    };
-
-    return (
-        <motion.div
-            style={{
-                rotateX,
-                rotateY,
-                transformStyle: "preserve-3d",
-            }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className={className}
-        >
-            {children}
-        </motion.div>
-    );
-};
 
 const Destinations = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [activeTab, setActiveTab] = useState('heritage');
 
-    const filteredDistricts = DISTRICTS.filter(d =>
-        d.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        d.bestPlace.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const categories = [
+        { id: 'heritage', label: 'Heritage & Spiritual', icon: '🏛️', desc: 'Timeless temples and ancient architecture.' },
+        { id: 'nature', label: 'Nature & Eco', icon: '🌿', desc: 'Misty hills, wildlife, and serene landscapes.' },
+        { id: 'leisure', label: 'Leisure & Adventure', icon: '🏖️', desc: 'Sun-kissed beaches and vibrant experiences.' },
+    ];
+
+    const destinationsData = {
+heritage: [
+    {
+      id: 1,
+      name: 'Madurai',
+                title: 'The City of Temples',
+                image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=2670&auto=format&fit=crop',
+                rating: 4.8,
+                safety: 98,
+                crowd: 'High',
+                tags: ['Meenakshi Temple', 'History', 'Food'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Oct–Mar'
+            },
+            {
+                id: 2,
+                name: 'Thanjavur',
+                title: 'Rice Bowl of Tamil Nadu',
+                image: 'https://images.unsplash.com/photo-1627894006066-b4528dc9052b?q=80&w=2670&auto=format&fit=crop', // Big Temple
+                rating: 4.9,
+                safety: 96,
+                crowd: 'Moderate',
+                tags: ['Brihadeeswarar Temple', 'Art', 'Culture'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Nov–Feb'
+            },
+            {
+                id: 3,
+                name: 'Mahabalipuram',
+                title: 'Stone Carvings & Shore Temples',
+                image: 'https://images.unsplash.com/photo-1621327017866-26795b87702f?q=80&w=2670&auto=format&fit=crop',
+                rating: 4.7,
+                safety: 95,
+                crowd: 'High',
+                tags: ['UNESCO Heritage', 'Beach', 'Sculptures'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Nov–Mar'
+            }
+        ],
+        nature: [
+            {
+                id: 4,
+                name: 'Ooty',
+                title: 'Queen of Hill Stations',
+                image: 'https://images.unsplash.com/photo-1548685122-f6b97645f629?q=80&w=2670&auto=format&fit=crop', // Tea gardens
+                rating: 4.6,
+                safety: 94,
+                crowd: 'High',
+                tags: ['Tea Gardens', 'Lake', 'Toy Train'],
+                bestSeason: 'cool',
+                seasonLabel: 'Apr–Jun'
+            },
+            {
+                id: 5,
+                name: 'Kodaikanal',
+                title: 'Princess of Hill Stations',
+                image: 'https://images.unsplash.com/photo-1596707328599-28c0c1969a59?q=80&w=2670&auto=format&fit=crop', // Kodai Lake
+                rating: 4.7,
+                safety: 97,
+                crowd: 'Moderate',
+                tags: ['Lake', 'Trekking', 'Mist'],
+                bestSeason: 'cool',
+                seasonLabel: 'Apr–Jun'
+            },
+            {
+                id: 6,
+                name: 'Yercaud',
+                title: 'Jewel of the South',
+                image: 'https://images.unsplash.com/photo-1595846519845-68e298c2edd8?q=80&w=2574&auto=format&fit=crop',
+                rating: 4.5,
+                safety: 99,
+                crowd: 'Low',
+                tags: ['Coffee', 'Quiet', 'Viewpoints'],
+                bestSeason: 'monsoon',
+                seasonLabel: 'Jul–Sep'
+            }
+        ],
+        leisure: [
+            {
+                id: 7,
+                name: 'Dhanushkodi',
+                title: 'Ghost Town & Mystic Beach',
+                image: 'https://images.unsplash.com/photo-1616853610260-84524c552026?q=80&w=2670&auto=format&fit=crop',
+                rating: 4.9,
+                safety: 88,
+                crowd: 'Low',
+                tags: ['Adventure', 'Ruins', 'Ocean'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Oct–Mar'
+            },
+            {
+                id: 8,
+                name: 'Pondicherry',
+                title: 'French Riviera of the East',
+                image: 'https://images.unsplash.com/photo-1582915293040-349929235d25?q=80&w=2670&auto=format&fit=crop', // Promenade
+                rating: 4.7,
+                safety: 92,
+                crowd: 'High',
+                tags: ['French Colony', 'Beaches', 'Cafes'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Oct–Mar'
+            },
+            {
+                id: 9,
+                name: 'Kanyakumari',
+                title: 'Tip of India',
+                image: 'https://images.unsplash.com/photo-1598322634336-d446927d3536?q=80&w=2670&auto=format&fit=crop', // Thiruvalluvar Statue
+                rating: 4.6,
+                safety: 93,
+                crowd: 'Very High',
+                tags: ['Sunrise', 'Vivekananda Rock', 'Sea'],
+                bestSeason: 'sunny',
+                seasonLabel: 'Oct–Mar'
+            }
+        ]
+    };
 
     return (
-        <div className="min-h-screen bg-bg-dark text-white pt-20 overflow-x-hidden">
+        <div className="min-h-screen bg-bg-dark text-white pt-24 pb-12 relative overflow-hidden">
+            {/* Background Gradients */}
+            <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-vibrant-blue/20 to-transparent -z-10 blur-3xl" />
 
-            {/* Vibrant Hero Header */}
-            <div className="relative py-28 px-6 bg-gradient-to-r from-vibrant-blue via-purple-700 to-vibrant-pink overflow-hidden">
-                <div className="absolute inset-0 bg-hero-pattern opacity-10 mix-blend-overlay"></div>
-                <div className="absolute top-0 left-0 w-64 h-64 bg-white/20 blur-[100px] rounded-full mix-blend-overlay"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-vibrant-gold/30 blur-[120px] rounded-full mix-blend-overlay"></div>
+            <div className="container mx-auto px-6">
 
-                <div className="container mx-auto text-center relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                    >
-                        <span className="text-vibrant-gold font-heading font-bold uppercase tracking-[0.3em] text-sm mb-4 block drop-shadow-md">
-                            Incredible Tamil Nadu
-                        </span>
-                        <h1 className="font-serif text-6xl md:text-8xl mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70 drop-shadow-lg">
-                            Colors of Culture
-                        </h1>
-                        <p className="max-w-2xl mx-auto text-lg md:text-xl font-light leading-relaxed text-white/90">
-                            Explore the vibrant soul of the South. From golden temples to azure oceans.
-                        </p>
-                    </motion.div>
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-16"
+                >
+                    <span className="text-vibrant-gold font-bold uppercase tracking-[0.3em] text-xs block mb-4 glow-text">Discover Tamil Nadu</span>
+                    <h1 className="font-heading text-5xl md:text-7xl font-bold mb-6">
+                        Explore by <span className="text-transparent bg-clip-text bg-gradient-to-r from-vibrant-pink to-vibrant-gold">Category</span>
+                    </h1>
+                    <p className="text-white/60 text-lg max-w-2xl mx-auto font-light">
+                        From the sacred chants of ancient temples to the silent whispers of misty hills, find a destination that resonates with your soul.
+                    </p>
+                </motion.div>
 
-                    {/* Glassmorphism Search Bar */}
-                    <motion.div
-                        initial={{ y: 50, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="max-w-2xl mx-auto mt-12 relative"
-                    >
-                        <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-full border border-white/30 shadow-xl"></div>
-                        <input
-                            type="text"
-                            placeholder="Find your next destination..."
-                            className="relative w-full bg-transparent text-white placeholder:text-white/60 px-8 py-4 outline-none rounded-full"
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                        />
-                        <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-vibrant-gold w-6 h-6 drop-shadow-md" />
-                    </motion.div>
-                </div>
-            </div>
-
-            {/* 3D Grid */}
-            <div className="container mx-auto px-6 py-24">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                    {filteredDistricts.map((district, index) => (
-                        <Link to={`/destinations/${district.id}`} key={district.id}>
-                            <TiltCard className="group relative h-[400px] rounded-3xl bg-glass-white backdrop-blur-sm border border-white/10 shadow-2xl overflow-hidden cursor-pointer">
-
-                                <div className="absolute inset-0 z-0">
-                                    <ImageWithFallback
-                                        src={district.image}
-                                        alt={district.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-                                </div>
-
-                                {/* Floating Content */}
-                                <div className="absolute bottom-0 left-0 w-full p-6 z-10 transform translate-z-10 group-hover:translate-y-[-10px] transition-transform duration-500">
-                                    {/* Safety Score Badge */}
-                                    {district.safetyScore && (
-                                        <div className="absolute top-[-50px] right-6 bg-black/60 backdrop-blur-md px-3 py-2 rounded-xl flex items-center gap-2 border border-green-500/30">
-                                            <Shield size={16} className="text-green-400" />
-                                            <span className="text-sm font-bold text-white">{district.safetyScore}</span>
-                                            <span className="text-xs text-white/60">/5</span>
-                                        </div>
-                                    )}
-
-                                    <span className="inline-block px-3 py-1 rounded-full bg-vibrant-pink/90 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-white mb-3 shadow-lg">
-                                        {district.tagline}
-                                    </span>
-                                    <h3 className="font-serif text-3xl text-white mb-2 drop-shadow-md">{district.name}</h3>
-
-                                    <div className="flex items-center gap-2 text-sm text-white/80">
-                                        <MapPin className="w-4 h-4 text-vibrant-gold" />
-                                        <span className="font-medium truncate">{district.bestPlace}</span>
+                {/* Tab Navigation */}
+                <div className="flex flex-wrap justify-center gap-4 mb-16">
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => setActiveTab(cat.id)}
+                            className={`relative px-8 py-4 rounded-full border transition-all duration-300 group ${activeTab === cat.id
+                                ? 'bg-white/10 border-vibrant-gold shadow-[0_0_20px_rgba(255,204,0,0.3)]'
+                                : 'bg-black/40 border-white/10 hover:border-white/30'
+                                }`}
+                        >
+                            <div className="flex items-center gap-3 relative z-10">
+                                <span className="text-2xl filter drop-shadow-lg">{cat.icon}</span>
+                                <div className="text-left">
+                                    <div className={`text-sm font-bold uppercase tracking-wider ${activeTab === cat.id ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                                        {cat.label}
                                     </div>
+                                    <div className="text-[10px] text-white/40 hidden md:block">{cat.desc}</div>
                                 </div>
-                            </TiltCard>
-                        </Link>
+                            </div>
+                        </button>
                     ))}
                 </div>
 
-                {filteredDistricts.length === 0 && (
-                    <div className="text-center py-20 text-white/40">
-                        <h3 className="text-3xl font-serif mb-2">No places found</h3>
-                        <p>The universe is vast, try searching for "Ooty".</p>
-                    </div>
-                )}
+                {/* Destination Grid */}
+                <motion.div
+                    layout
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                >
+                    <AnimatePresence mode='popLayout'>
+                        {destinationsData[activeTab].map((dest) => (
+                            <motion.div
+                                key={dest.id}
+                                layout
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3 }}
+                                className="group relative h-[450px] rounded-3xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-sm hover:border-vibrant-gold/50 transition-colors"
+                            >
+                                {/* Image Overlay */}
+                                <div className="absolute inset-0 z-0">
+                                    <img
+                                        src={dest.image}
+                                        alt={dest.name}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
+                                </div>
+
+                                {/* Content */}
+                                <div className="absolute inset-x-0 bottom-0 p-8 z-10 flex flex-col justify-end h-full">
+
+                                    {/* Top Badges */}
+                                    <div className="absolute top-6 right-6 flex flex-col gap-2 items-end">
+                                        <div className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full border border-white/10 flex items-center gap-2">
+                                            <Star className="w-3 h-3 text-vibrant-gold fill-vibrant-gold" />
+                                            <span className="text-xs font-bold">{dest.rating}</span>
+                                        </div>
+                                        <div className="px-3 py-1 bg-green-500/20 backdrop-blur-md rounded-full border border-green-500/30 flex items-center gap-2">
+                                            <Shield className="w-3 h-3 text-green-400" />
+                                            <span className="text-[10px] font-bold text-green-400">{dest.safety}% Safe</span>
+                                        </div>
+                                        {dest.bestSeason && (
+                                            <div className={`px-3 py-1 backdrop-blur-md rounded-full border flex items-center gap-2 ${
+                                                dest.bestSeason === 'sunny' ? 'bg-yellow-500/20 border-yellow-500/30' :
+                                                dest.bestSeason === 'monsoon' ? 'bg-blue-500/20 border-blue-500/30' :
+                                                'bg-cyan-500/20 border-cyan-500/30'
+                                            }`}>
+                                                {dest.bestSeason === 'sunny' ? <Sun className="w-3 h-3 text-yellow-400" /> :
+                                                 dest.bestSeason === 'monsoon' ? <Umbrella className="w-3 h-3 text-blue-400" /> :
+                                                 <Sun className="w-3 h-3 text-cyan-400" />}
+                                                <span className={`text-[10px] font-bold ${
+                                                    dest.bestSeason === 'sunny' ? 'text-yellow-400' :
+                                                    dest.bestSeason === 'monsoon' ? 'text-blue-400' :
+                                                    'text-cyan-400'
+                                                }`}>{dest.seasonLabel}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="transform transition-transform duration-500 group-hover:-translate-y-4">
+                                        <div className="flex gap-2 mb-3 flex-wrap">
+                                            {dest.tags.map(tag => (
+                                                <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white/80 border border-white/5">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+
+                                        <h3 className="text-3xl font-heading font-bold text-white mb-1 group-hover:text-vibrant-gold transition-colors">{dest.name}</h3>
+                                        <p className="text-white/60 text-sm mb-6">{dest.title}</p>
+
+                                        {/* Quick Stats */}
+                                        <div className="grid grid-cols-2 gap-4 mb-6 border-t border-white/10 pt-4">
+                                            <div className="flex items-center gap-2">
+                                                <Users className="w-4 h-4 text-vibrant-pink" />
+                                                <div>
+                                                    <div className="text-[10px] text-white/40 uppercase">Crowd</div>
+                                                    <div className="text-xs font-bold">{dest.crowd}</div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Camera className="w-4 h-4 text-vibrant-blue" />
+                                                <div>
+                                                    <div className="text-[10px] text-white/40 uppercase">Vibe</div>
+                                                    <div className="text-xs font-bold">{activeTab === 'heritage' ? 'Spiritual' : activeTab === 'nature' ? 'Serene' : 'Fun'}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <Link to={`/explore/${dest.id}`} className="inline-flex items-center gap-2 text-vibrant-gold font-bold text-sm tracking-widest uppercase hover:gap-4 transition-all">
+                                            Explore Plan <ArrowRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
+
             </div>
         </div>
     );

@@ -1,42 +1,72 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, MapPin, Cloud, Users, Navigation, Share2, Download, ArrowRight, Sun } from 'lucide-react';
+import { Clock, MapPin, Cloud, Users, Navigation, Share2, Download, ArrowRight, Sun, Loader } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import ParticleBackground from '../components/ui/ParticleBackground';
+import { generateItinerary } from '../services/gemini';
 
 const ItineraryGenerator = () => {
     const location = useLocation();
-    const preferences = location.state?.preferences || { mood: 'spiritual', duration: 3, budget: 'medium', travelers: 2 };
-
-    // Convert duration to number if it's not
-    const duration = parseInt(preferences.duration) || 3;
-
-    // Mock AI Generation Logic
-    const generatePlan = () => {
-        const days = [];
-        for (let i = 1; i <= duration; i++) {
-            days.push({
-                day: i,
-                activities: [
-                    { time: '09:00 AM', title: 'Breakfast at Murugan Idli Shop', type: 'food' },
-                    { time: '10:30 AM', title: `Visit Meenakshi Temple (${preferences.mood} Focus)`, type: 'visit' },
-                    { time: '01:00 PM', title: 'Lunch at Amsavalli Bhavan', type: 'food' },
-                    { time: '03:00 PM', title: 'Thirumalai Nayakkar Mahal', type: 'visit' },
-                    { time: '06:00 PM', title: 'Shopping at Puthukmandapam', type: 'activity' },
-                ],
-                weather: { temp: '28°C', condition: 'Sunny' },
-                crowd: 'High'
-            });
-        }
-        return days;
+    const preferences = location.state?.preferences || {
+        destination: 'Madurai',
+        mood: 'spiritual',
+        duration: 3,
+        budget: 'Standard',
+        travelers: 2
     };
 
-    const [itinerary, setItinerary] = useState(generatePlan());
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [itineraryData, setItineraryData] = useState(null);
     const [selectedDay, setSelectedDay] = useState(1);
 
+    // Generate itinerary on mount
+    useEffect(() => {
+        const fetchItinerary = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const data = await generateItinerary(
+                    preferences.destination || 'Madurai',
+                    preferences.travelers || 2,
+                    preferences.budget || 'Standard',
+                    preferences.mood || 'spiritual',
+                    preferences.duration || 3
+                );
+                setItineraryData(data);
+            } catch (err) {
+                setError("Failed to generate itinerary. Showing sample data.");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchItinerary();
+    }, [preferences.destination, preferences.duration, preferences.travelers, preferences.budget, preferences.mood]);
+
+    // Loading state
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-transparent text-white relative font-sans flex items-center justify-center">
+                <ParticleBackground />
+                <Navbar />
+                <div className="text-center">
+                    <Loader className="w-12 h-12 text-vibrant-gold animate-spin mx-auto mb-4" />
+                    <h2 className="text-2xl font-heading">Crafting Your Perfect Journey...</h2>
+                    <p className="text-white/60 mt-2">Our AI is preparing a personalized itinerary for {preferences.destination}</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state (will show mock data)
+    const itinerary = itineraryData?.days || [];
+    const destination = preferences.destination || 'Madurai';
+
     return (
-        <div className="min-h-screen bg-bg-dark text-white relative font-sans">
+        <div className="min-h-screen bg-transparent text-white relative font-sans">
             <ParticleBackground />
             <div className="fixed inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20 pointer-events-none" />
 
@@ -48,37 +78,51 @@ const ItineraryGenerator = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <span className="text-vibrant-gold uppercase tracking-widest text-sm font-bold block mb-2">Your AI-Drafted Journey</span>
-                    <h1 className="font-heading text-5xl md:text-6xl font-bold mb-4 text-glow-gold">Madurai: The Soul of Tamil Nadu</h1>
+                    <span className="text-vibrant-gold uppercase tracking-widest text-sm font-bold block mb-2">Your AI-Crafted Journey</span>
+                    <h1 className="font-heading text-5xl md:text-6xl font-bold mb-4 text-glow-gold">{destination}: Discover Tamil Nadu</h1>
                     <div className="flex justify-center gap-4 text-white/60 text-sm">
                         <span className="bg-white/5 px-3 py-1 rounded-full border border-white/10">{preferences.mood} Vibes</span>
-                        <span className="bg-white/5 px-3 py-1 rounded-full border border-white/10">{duration} Days</span>
+                        <span className="bg-white/5 px-3 py-1 rounded-full border border-white/10">{preferences.duration} Days</span>
                         <span className="bg-white/5 px-3 py-1 rounded-full border border-white/10">{preferences.travelers} Travelers</span>
                     </div>
+                    {error && (
+                        <p className="text-yellow-400 text-sm mt-2 bg-yellow-500/10 py-2 px-4 rounded-lg inline-block">{error}</p>
+                    )}
                 </motion.div>
 
                 <div className="grid lg:grid-cols-12 gap-8 pb-20">
 
                     {/* Sidebar: Day Selector & Stats */}
                     <div className="lg:col-span-4 space-y-6">
-                        {/* Weather & Crowd Widget */}
+                        {/* Travel AI Metrics Widget */}
                         <motion.div
                             initial={{ x: -20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             className="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 relative overflow-hidden group"
                         >
                             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Cloud size={100} /></div>
-                            <h3 className="font-heading text-lg text-white mb-4 flex items-center gap-2"><Sun size={18} className="text-vibrant-gold" /> Travel Insights</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-black/40 p-3 rounded-xl border border-white/5">
-                                    <div className="text-white/50 text-xs mb-1 uppercase tracking-wide">Forecast</div>
-                                    <div className="text-2xl font-bold text-white mb-1">28°C</div>
-                                    <div className="text-xs text-vibrant-blue flex items-center gap-1"><Cloud size={10} /> Sunny</div>
+                            <h3 className="font-heading text-lg text-white mb-4 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                                Cognitive Metrics
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="bg-black/40 p-3 rounded-xl border border-white/5 flex justify-between items-center">
+                                    <div>
+                                        <div className="text-white/50 text-[10px] mb-0.5 uppercase tracking-wide">Environmental Stress (ESI)</div>
+                                        <div className="text-xl font-bold text-white">{itineraryData?.travelAIMetrics?.esiScore || 24}<span className="text-xs text-white/40 ml-1">/100</span></div>
+                                    </div>
+                                    <div className="text-xs text-green-400 bg-green-400/10 px-2 py-1 rounded">Low Friction</div>
                                 </div>
-                                <div className="bg-black/40 p-3 rounded-xl border border-white/5">
-                                    <div className="text-white/50 text-xs mb-1 uppercase tracking-wide">Crowd</div>
-                                    <div className="text-2xl font-bold text-vibrant-pink mb-1">High</div>
-                                    <div className="text-xs text-white/40">Peak Season</div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-black/40 p-3 rounded-xl border border-white/5">
+                                        <div className="text-white/50 text-[10px] mb-1 uppercase tracking-wide">Eco-Score</div>
+                                        <div className="text-2xl font-bold text-vibrant-gold mb-1">{itineraryData?.travelAIMetrics?.ecoScore || 'A'}</div>
+                                    </div>
+                                    <div className="bg-black/40 p-3 rounded-xl border border-white/5">
+                                        <div className="text-white/50 text-[10px] mb-1 uppercase tracking-wide">Fatigue Index</div>
+                                        <div className="text-2xl font-bold text-vibrant-pink mb-1">{itineraryData?.travelAIMetrics?.fatigueIndex || 4}<span className="text-xs text-white/40">/10</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
@@ -121,10 +165,13 @@ const ItineraryGenerator = () => {
                             <h2 className="font-heading text-3xl mb-8 flex items-center gap-3">
                                 <span className="w-10 h-10 rounded-full bg-vibrant-gold/20 flex items-center justify-center text-vibrant-gold text-lg font-bold border border-vibrant-gold/30">{selectedDay}</span>
                                 Day {selectedDay} Schedule
+                                <span className="ml-auto flex items-center gap-2 text-sm font-normal text-yellow-400/80 bg-yellow-400/10 px-3 py-1.5 rounded-full border border-yellow-400/20">
+                                    <Sun size={14} className="text-yellow-400" /> Warm & Sunny
+                                </span>
                             </h2>
 
                             <div className="relative pl-8 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-vibrant-gold before:via-white/10 before:to-transparent">
-                                {itinerary[selectedDay - 1]?.activities.map((item, idx) => (
+                                {(itinerary[selectedDay - 1]?.activities || []).map((item, idx) => (
                                     <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, x: 20 }}

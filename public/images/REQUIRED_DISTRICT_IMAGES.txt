@@ -1,0 +1,41 @@
+// This is a list of all unique district image filenames you need to add to public/images/ for complete coverage.
+// Place a unique image for each district using the format: [id].jpg
+// Example: ariy.jpg for Ariyalur, cgl.jpg for Chengalpattu, etc.
+
+ariy.jpg
+cgl.jpg
+chn.jpg
+cbe.jpg
+cud.jpg
+din.jpg
+dro.jpg
+kal.jpg
+kan.jpg
+kpk.jpg
+kar.jpg
+kri.jpg
+mdu.jpg
+may.jpg
+nag.jpg
+nam.jpg
+nil.jpg
+per.jpg
+pud.jpg
+ram.jpg
+ran.jpg
+sal.jpg
+siv.jpg
+ten.jpg
+tha.jpg
+the.jpg
+thir.jpg
+thiru.jpg
+tho.jpg
+tir.jpg
+tiru.jpg
+tirup.jpg
+tirupp.jpg
+tiruva.jpg
+vel.jpg
+vil.jpg
+vir.jpg

@@ -1,0 +1,70 @@
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\components\Map.jsx[24m[0m
+[0m   [2m42:41[22m  [33mwarning[39m  'resourceType' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        [2mno-unused-vars[22m[0m
+[0m  [2m169:13[22m  [31merror[39m    Error: Calling setState synchronously within an effect can trigger cascading renders[0m
+[0m[0m
+[0mEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:[0m
+[0m* Update external systems with the latest state from React.[0m
+[0m* Subscribe for updates from some external system, calling setState in a callback function when external state changes.[0m
+[0m[0m
+[0mCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).[0m
+[0m[0m
+[0m  167 |         } catch (error) {[0m
+[0m  168 |             console.error('Failed to initialize Map:', error);[0m
+[0m> 169 |             setMapError(true);[0m
+[0m      |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect[0m
+[0m  170 |         }[0m
+[0m  171 |[0m
+[0m  172 |         return () => {  [2mreact-hooks/set-state-in-effect[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\components\ui\Button.jsx[24m[0m
+[0m  [2m39:18[22m  [33mwarning[39m  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  [2mreact-refresh/only-export-components[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\components\ui\CustomCursor.jsx[24m[0m
+[0m  [2m43:8[22m  [33mwarning[39m  React Hook useEffect has missing dependencies: 'cursorX' and 'cursorY'. Either include them or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\components\ui\GoogleMap.jsx[24m[0m
+[0m  [2m85:8[22m  [33mwarning[39m  React Hook useEffect has a missing dependency: 'markers'. Either include it or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\context\AuthContext.jsx[24m[0m
+[0m   [2m5:14[22m  [33mwarning[39m  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          [2mreact-refresh/only-export-components[22m[0m
+[0m  [2m20:13[22m  [31merror[39m    Error: Calling setState synchronously within an effect can trigger cascading renders[0m
+[0m[0m
+[0mEffects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:[0m
+[0m* Update external systems with the latest state from React.[0m
+[0m* Subscribe for updates from some external system, calling setState in a callback function when external state changes.[0m
+[0m[0m
+[0mCalling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).[0m
+[0m[0m
+[0m  18 |             }, 0);[0m
+[0m  19 |         } else {[0m
+[0m> 20 |             setLoading(false);[0m
+[0m     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect[0m
+[0m  21 |         }[0m
+[0m  22 |     }, []);[0m
+[0m  23 |  [2mreact-hooks/set-state-in-effect[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\pages\Planner.jsx[24m[0m
+[0m  [2m63:80[22m  [33mwarning[39m  'moods' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]|motion|e|error|next/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\pages\TravelTools.jsx[24m[0m
+[0m  [2m84:26[22m  [33mwarning[39m  'e' is defined but never used  [2mno-unused-vars[22m[0m
+[0m  [2m84:29[22m  [33mwarning[39m  Empty block statement          [2mno-empty[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\services\PlaceDataService.js[24m[0m
+[0m  [2m16:11[22m  [33mwarning[39m  Empty block statement  [2mno-empty[22m[0m
+[0m  [2m26:11[22m  [33mwarning[39m  Empty block statement  [2mno-empty[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\services\aiOrchestrator.js[24m[0m
+[0m   [2m23:13[22m  [33mwarning[39m  Empty block statement             [2mno-empty[22m[0m
+[0m   [2m30:13[22m  [33mwarning[39m  Empty block statement             [2mno-empty[22m[0m
+[0m  [2m237:39[22m  [33mwarning[39m  Unnecessary escape character: \[  [2mno-useless-escape[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\services\chennaiAgent.js[24m[0m
+[0m  [2m21:11[22m  [33mwarning[39m  Empty block statement  [2mno-empty[22m[0m
+[0m[0m
+[0m[4mC:\Users\HP\Desktop\tourism\src\services\gemini.js[24m[0m
+[0m  [2m6:94[22m  [33mwarning[39m  'userKey' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 17 problems (2 errors, 15 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Star, MapPin, Compass, Mountain, Quote } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import CustomCursor from '../components/ui/CustomCursor';
@@ -8,6 +8,9 @@ import CardCarousel from '../components/ui/CardCarousel';
 import ColorShiftingText from '../components/ui/ColorShiftingText';
 import ParticleBackground from '../components/ui/ParticleBackground';
 import ScrollProgress from '../components/ui/ScrollProgress';
+import TrendMonitor from '../components/ui/TrendMonitor';
+import AnimatedCounter from '../components/ui/AnimatedCounter';
+import ImageReveal from '../components/ui/ImageReveal';
 
 const LandingPage = () => {
     const { scrollY } = useScroll();
@@ -18,7 +21,7 @@ const LandingPage = () => {
     const yText = useTransform(scrollY, [0, 500], [0, -100]);
 
     return (
-        <div className="font-sans bg-bg-dark text-white min-h-screen overflow-x-hidden selection:bg-vibrant-pink selection:text-white cursor-none relative">
+        <div className="font-sans bg-transparent text-white min-h-screen overflow-x-hidden selection:bg-vibrant-pink selection:text-white cursor-none relative">
             <CustomCursor />
             <ParticleBackground />
             <ScrollProgress />
@@ -29,7 +32,6 @@ const LandingPage = () => {
             <div className="fixed top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-vibrant-gold z-[50] animate-pulse" />
             <div className="fixed bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-vibrant-gold z-[50] animate-pulse" />
             <div className="fixed bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-vibrant-gold z-[50] animate-pulse" />
-
 
             {/* HERO SECTION - Immersive Video/Image */}
             <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
@@ -43,55 +45,69 @@ const LandingPage = () => {
                     <div className="absolute inset-0 bg-vibrant-blue/10 mix-blend-overlay" />
                 </motion.div>
 
-                <motion.div
-                    style={{ y: yText, opacity: opacityHero }}
-                    className="relative z-10 text-center px-6 max-w-5xl mx-auto"
-                >
+                <div className="relative z-10 container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="flex items-center justify-center gap-3 mb-6"
+                        style={{ y: yText, opacity: opacityHero }}
+                        className="text-left"
                     >
-                        <Star className="w-5 h-5 text-vibrant-gold fill-vibrant-gold animate-pulse" />
-                        <span className="font-sans uppercase tracking-[0.4em] text-sm text-vibrant-gold font-bold">The Soul of India</span>
-                        <Star className="w-5 h-5 text-vibrant-gold fill-vibrant-gold animate-pulse" />
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="flex items-center gap-3 mb-6"
+                        >
+                            <Star className="w-5 h-5 text-vibrant-gold fill-vibrant-gold animate-pulse" />
+                            <span className="font-sans uppercase tracking-[0.4em] text-sm text-vibrant-gold font-bold">Smart Mobility Platform</span>
+                        </motion.div>
+
+                        <motion.h1
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 1, ease: "easeOut" }}
+                            className="font-heading text-6xl md:text-8xl font-bold text-white mb-4 leading-tight drop-shadow-2xl text-shadow-lg"
+                        >
+                            TRAVEL<span className="text-transparent bg-clip-text bg-gradient-to-r from-vibrant-gold to-vibrant-pink"> AI</span>
+                        </motion.h1>
+
+                        <div className="text-vibrant-gold font-heading text-2xl md:text-3xl mb-8 opacity-90 drop-shadow-md">
+                            Tamil Nadu: Smart Travel Navigation
+                        </div>
+
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            className="text-white text-xl font-light tracking-wide max-w-xl mb-12 drop-shadow-md"
+                        >
+                            Experience the soul of India through our Cognitive Tourism Engine. Let AI eliminate the friction of travel.
+                        </motion.p>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.8 }}
+                        >
+                            <Link to="/explore">
+                                <button className="group relative px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full overflow-hidden transition-all hover:bg-white/20 hover:scale-105 active:scale-95">
+                                    <span className="relative z-10 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
+                                        Explore the Unseen <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    </span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-vibrant-pink/50 to-vibrant-blue/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                                </button>
+                            </Link>
+                        </motion.div>
                     </motion.div>
 
-                    <motion.h1
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, ease: "easeOut" }}
-                        className="font-heading text-7xl md:text-9xl font-bold text-white mb-8 leading-tight drop-shadow-2xl text-glow-gold"
-                    >
-                        TAMIL <br />
-                        <ColorShiftingText text="NADU" />
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.5 }}
-                        className="text-white/80 text-xl font-light tracking-wide max-w-2xl mx-auto mb-12"
-                    >
-                        Where stories are etched in stone, and culture dances in the wind.
-                    </motion.p>
-
+                    {/* Trend Monitor Widget */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.8 }}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 1, delay: 1 }}
+                        className="hidden md:flex justify-end"
                     >
-                        <Link to="/destinations">
-                            <button className="group relative px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full overflow-hidden transition-all hover:bg-white/20 hover:scale-105 active:scale-95">
-                                <span className="relative z-10 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-                                    Explore the Unseen <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-vibrant-pink/50 to-vibrant-blue/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-                            </button>
-                        </Link>
+                        <TrendMonitor />
                     </motion.div>
-                </motion.div>
+                </div>
             </section>
 
             {/* INFINITE MARQUEE */}
@@ -201,6 +217,144 @@ const LandingPage = () => {
                 </div>
             </section>
 
+            {/* STATISTICS SECTION */}
+            <section className="py-24 relative z-10">
+                <div className="container mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16"
+                    >
+                        <span className="text-vibrant-gold uppercase tracking-[0.3em] text-sm font-bold">Tamil Nadu in Numbers</span>
+                        <h2 className="font-heading text-5xl md:text-6xl mt-4 text-glow-gold">An Ancient Land of Wonders</h2>
+                    </motion.div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        {[
+                            { end: 38, suffix: '', label: 'Districts to Explore', icon: <MapPin className="w-6 h-6 text-vibrant-gold" /> },
+                            { end: 1000, suffix: '+', label: 'Temples & Heritage Sites', icon: <Compass className="w-6 h-6 text-vibrant-pink" /> },
+                            { end: 4.8, suffix: '★', label: 'Average Rating', icon: <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" /> },
+                            { end: 50, suffix: 'M+', label: 'Annual Visitors', icon: <Mountain className="w-6 h-6 text-vibrant-blue" /> },
+                        ].map((stat, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="text-center p-8 rounded-3xl bg-glass-white backdrop-blur-md border border-white/10 hover:border-vibrant-gold/30 transition-colors group"
+                            >
+                                <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform">{stat.icon}</div>
+                                <div className="text-5xl font-heading font-bold text-white mb-2">
+                                    <AnimatedCounter end={stat.end} suffix={stat.suffix} duration={2.5} />
+                                </div>
+                                <div className="text-white/50 text-sm font-medium">{stat.label}</div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* WHY TAMIL NADU SECTION */}
+            <section className="py-24 relative z-10">
+                <div className="container mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16"
+                    >
+                        <span className="text-vibrant-pink uppercase tracking-[0.3em] text-sm font-bold">Why Tamil Nadu?</span>
+                        <h2 className="font-heading text-5xl md:text-6xl mt-4 text-glow-gold">Every Corner Tells a Story</h2>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                title: 'UNESCO Heritage',
+                                desc: 'Home to 3 UNESCO World Heritage Sites including the Great Living Chola Temples and Mahabalipuram.',
+                                image: 'https://images.unsplash.com/photo-1621327017866-26795b87702f?q=80&w=800&auto=format&fit=crop',
+                                color: 'vibrant-gold'
+                            },
+                            {
+                                title: 'Culinary Paradise',
+                                desc: 'From Chettinad spices to filter coffee and Madurai jigarthanda — every meal is an expedition.',
+                                image: 'https://images.unsplash.com/photo-1567337710282-00832b415979?q=80&w=800&auto=format&fit=crop',
+                                color: 'vibrant-pink'
+                            },
+                            {
+                                title: 'Hill Stations & Beaches',
+                                desc: 'Escape to the misty Nilgiris or soak in the sun at Marina Beach — nature\'s every mood awaits.',
+                                image: 'https://images.unsplash.com/photo-1548685122-f6b97645f629?q=80&w=800&auto=format&fit=crop',
+                                color: 'vibrant-blue'
+                            },
+                        ].map((item, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.15 }}
+                                className="rounded-3xl overflow-hidden border border-white/10 bg-glass-white backdrop-blur-sm group hover:border-white/20 transition-all"
+                            >
+                                <ImageReveal src={item.image} alt={item.title} className="h-56" direction={i === 1 ? 'right' : 'left'} />
+                                <div className="p-6">
+                                    <h3 className={`font-heading text-2xl mb-3 text-${item.color}`}>{item.title}</h3>
+                                    <p className="text-white/60 text-sm leading-relaxed">{item.desc}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* TESTIMONIALS SECTION */}
+            <section className="py-24 relative z-10">
+                <div className="container mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16"
+                    >
+                        <span className="text-vibrant-blue uppercase tracking-[0.3em] text-sm font-bold">Traveler Stories</span>
+                        <h2 className="font-heading text-5xl md:text-6xl mt-4 text-glow-gold">What Explorers Say</h2>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            { name: 'Priya R.', from: 'Bengaluru', text: 'The AI planner created the perfect Kodaikanal itinerary. Every hotel and restaurant recommendation was spot-on!', rating: 5 },
+                            { name: 'Arjun M.', from: 'Mumbai', text: 'I discovered hidden temples in Kumbakonam that I would have never found on my own. This app is a game-changer.', rating: 5 },
+                            { name: 'Sarah L.', from: 'London', text: 'As a foreigner, the cultural insights and safety tips made me feel confident exploring Tamil Nadu solo. Absolutely loved it!', rating: 5 },
+                        ].map((review, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                className="p-8 rounded-3xl bg-glass-white backdrop-blur-md border border-white/10 hover:border-vibrant-gold/20 transition-all relative"
+                            >
+                                <Quote className="w-8 h-8 text-vibrant-gold/30 mb-4" />
+                                <p className="text-white/70 text-sm leading-relaxed mb-6">"{review.text}"</p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <div className="font-bold text-white">{review.name}</div>
+                                        <div className="text-xs text-white/40">{review.from}</div>
+                                    </div>
+                                    <div className="flex gap-0.5">
+                                        {Array.from({ length: review.rating }).map((_, j) => (
+                                            <Star key={j} size={14} className="text-vibrant-gold fill-vibrant-gold" />
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* CTA SECTION */}
             <section className="py-24 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-vibrant-blue via-purple-900 to-vibrant-pink opacity-20 animate-pulse" />
@@ -210,8 +364,8 @@ const LandingPage = () => {
                     viewport={{ once: true }}
                     className="container mx-auto px-6 text-center relative z-10"
                 >
-                    <h2 className="font-heading text-5xl md:text-7xl mb-8 text-glow-gold">Ready for your Yatra?</h2>
-                    <p className="text-white/60 text-xl mb-12 max-w-2xl mx-auto">Let AI craft your perfect journey through the land of temples.</p>
+                    <h2 className="font-heading text-5xl md:text-7xl mb-8 text-glow-gold">Experience Smart Travel</h2>
+                    <p className="text-white/60 text-xl mb-12 max-w-2xl mx-auto">Let Travel AI chart your optimized, high-fidelity journey through Tamil Nadu.</p>
                     <Link to="/planner">
                         <motion.button
                             whileHover={{ scale: 1.1, rotate: [0, -2, 2, 0] }}
@@ -228,34 +382,5 @@ const LandingPage = () => {
         </div>
     );
 };
-
-const FeatureCard = ({ title, subtitle, icon, image, className }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className={`relative group h-[500px] rounded-[2rem] overflow-hidden border border-white/10 bg-glass-white backdrop-blur-sm shadow-2xl cursor-pointer ${className}`}
-    >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
-
-        <img
-            src={image}
-            alt={title}
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-
-        <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-            <div className="mb-4 transform translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-4 border border-white/20">
-                    {icon}
-                </div>
-            </div>
-
-            <h3 className="font-heading text-3xl mb-2">{title}</h3>
-            <p className="text-white/70 font-light text-lg">{subtitle}</p>
-        </div>
-    </motion.div>
-);
 
 export default LandingPage;

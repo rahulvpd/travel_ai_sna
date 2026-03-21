@@ -1,0 +1,7 @@
+C:\Users\HP\Desktop\tourism\src\components\ui\Button.jsx
+  Line 39: Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+C:\Users\HP\Desktop\tourism\src\context\AuthContext.jsx
+  Line 5: Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+C:\Users\HP\Desktop\tourism\src\services\PlaceDataService.js
+  Line 16: 'e' is defined but never used.
+  Line 26: 'e' is defined but never used.

@@ -10,19 +10,25 @@ const CultureHub = () => {
             name: 'Pongal Festival',
             date: 'Jan 14-17',
             desc: 'The great harvest festival of Tamil Nadu, celebrating nature and farmers.',
-            image: 'https://images.unsplash.com/photo-1610992795556-9d33a6f1ac9c?q=80&w=800&auto=format&fit=crop'
+            image: 'https://images.unsplash.com/photo-1610992795556-9d33a6f1ac9c?q=80&w=800&auto=format&fit=crop',
+            location: 'All of Tamil Nadu',
+            music: 'Parai Melam & Folk Songs'
         },
         {
             name: 'Chithirai Festival',
             date: 'April 2026',
             desc: 'The celestial wedding of Goddess Meenakshi in Madurai.',
-            image: 'https://images.unsplash.com/photo-1620046522501-f236e7a2e54e?q=80&w=800&auto=format&fit=crop'
+            image: 'https://images.unsplash.com/photo-1620046522501-f236e7a2e54e?q=80&w=800&auto=format&fit=crop',
+            location: 'Meenakshi Temple, Madurai',
+            music: 'Nadaswaram & Thavil'
         },
         {
             name: 'Mahamaham',
             date: 'Feb 2026',
             desc: 'A grand festival celebrated once in 12 years at Kumbakonam.',
-            image: 'https://images.unsplash.com/photo-1599136152766-3d7c588523b0?q=80&w=800&auto=format&fit=crop'
+            image: 'https://images.unsplash.com/photo-1599136152766-3d7c588523b0?q=80&w=800&auto=format&fit=crop',
+            location: 'Mahamaham Tank, Kumbakonam',
+            music: 'Devotional Hymns'
         }
     ];
 
@@ -42,7 +48,7 @@ const CultureHub = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-bg-dark text-white relative">
+        <div className="min-h-screen bg-transparent text-white relative">
             <ParticleBackground />
             <Navbar />
 
@@ -79,6 +85,18 @@ const CultureHub = () => {
                                         <span className="text-xs bg-vibrant-pink px-2 py-1 rounded text-white font-bold">{fest.date}</span>
                                     </div>
                                     <p className="text-white/70 text-sm line-clamp-2">{fest.desc}</p>
+                                    <div className="flex flex-wrap gap-3 mt-3">
+                                        {fest.location && (
+                                            <span className="flex items-center gap-1 text-xs text-white/50">
+                                                <MapPin size={10} /> {fest.location}
+                                            </span>
+                                        )}
+                                        {fest.music && (
+                                            <span className="flex items-center gap-1 text-xs text-vibrant-gold/80">
+                                                <Music size={10} /> {fest.music}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}

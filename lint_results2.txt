@@ -1,0 +1,367 @@
+﻿
+> tourism-app@0.0.0 lint
+> eslint .
+
+
+C:\Users\HP\Desktop\tourism\backend_legacy\src\config\database.js
+   7:5  error  'process' is not defined  no-undef
+   9:9  error  'process' is not defined  no-undef
+  10:9  error  'process' is not defined  no-undef
+
+C:\Users\HP\Desktop\tourism\backend_legacy\src\controllers\authController.js
+  41:13  error  'process' is not defined  no-undef
+  87:13  error  'process' is not defined  no-undef
+
+C:\Users\HP\Desktop\tourism\backend_legacy\src\middleware\auth.js
+  11:43  error  'process' is not defined           no-undef
+  14:14  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\backend_legacy\src\server.js
+  11:14  error  'process' is not defined          no-undef
+  28:25  error  'next' is defined but never used  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\backend\src\config\database.js
+   7:5  error  'process' is not defined  no-undef
+   9:9  error  'process' is not defined  no-undef
+  10:9  error  'process' is not defined  no-undef
+
+C:\Users\HP\Desktop\tourism\newfolder\backend\src\controllers\authController.js
+  41:13  error  'process' is not defined  no-undef
+  87:13  error  'process' is not defined  no-undef
+
+C:\Users\HP\Desktop\tourism\newfolder\backend\src\middleware\auth.js
+  11:43  error  'process' is not defined           no-undef
+  14:14  error  'error' is defined but never used  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\backend\src\server.js
+  11:14  error  'process' is not defined          no-undef
+  28:25  error  'next' is defined but never used  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\booking\BookingForm.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\layout\Navbar.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\planner\CultureSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\planner\FoodSection.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                  no-unused-vars
+  11:11  error  'getSpiceLabel' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\planner\SocialDashboard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\planner\ToolsSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\AnimatedBackground.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\Button.jsx
+  39:18  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\CardCarousel.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u           no-unused-vars
+  85:27  error  'isPrev' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  86:27  error  'isNext' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\ColorShiftingText.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\CustomCursor.jsx
+   2:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                               no-unused-vars
+  43:8   warning  React Hook useEffect has missing dependencies: 'cursorX' and 'cursorY'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\ParticleBackground.jsx
+   2:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+  18:9   warning  Compilation Skipped: Inline `class` declarations are not supported
+
+Move class declarations outside of components/hooks.
+
+  16 |         const particleCount = 50;
+  17 |
+> 18 |         class Particle {
+     |         ^^^^^^^^^^^^^^^^
+> 19 |             constructor() {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |                 this.x = Math.random() * canvas.width;
+     ÔÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |         }
+     | ^^^^^^^^^^ Inline `class` declarations are not supported
+  45 |
+  46 |         for (let i = 0; i < particleCount; i++) {
+  47 |             particles.push(new Particle());
+
+  react-hooks/unsupported-syntax
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\ScrollProgress.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\SearchFilter.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\components\ui\TrendMonitor.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\context\AuthContext.jsx
+   5:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-refresh/only-export-components
+  15:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  13 |         const storedUser = localStorage.getItem('tourism_user');
+  14 |         if (storedUser) {
+> 15 |             setUser(JSON.parse(storedUser));
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  16 |         }
+  17 |         setLoading(false);
+  18 |     }, []);  react-hooks/set-state-in-effect
+  36:34  error  'password' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\CultureHub.jsx
+  1:10  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\DestinationDetails.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\Destinations.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\FoodFinder.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u              no-unused-vars
+  8:12  error  'filter' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  8:20  error  'setFilter' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\ItineraryGenerator.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\LandingPage.jsx
+  1:10  error  'useRef' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\Login.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\Planner.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\Signup.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\TravelTools.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\newfolder\src\pages\TripPlanner.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+  10:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\Map.jsx
+  27:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  25 |         if (!OLA_MAPS_API_KEY) {
+  26 |             console.error("Ola Maps API key is missing.");
+> 27 |             setMapError(true);
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |             return;
+  29 |         }
+  30 |         if (!mapContainer.current) return;  react-hooks/set-state-in-effect
+  42:41  error  'resourceType' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\booking\BookingForm.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\layout\Navbar.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\planner\CultureSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\planner\FoodSection.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                  no-unused-vars
+  11:11  error  'getSpiceLabel' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\planner\SocialDashboard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\planner\ToolsSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\AnimatedBackground.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\AnimatedCounter.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\Button.jsx
+  39:18  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\HP\Desktop\tourism\src\components\ui\CardCarousel.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u           no-unused-vars
+  85:27  error  'isPrev' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  86:27  error  'isNext' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\ColorShiftingText.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\CustomCursor.jsx
+   2:10  error    'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                               no-unused-vars
+  43:8   warning  React Hook useEffect has missing dependencies: 'cursorX' and 'cursorY'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\HP\Desktop\tourism\src\components\ui\GoogleMap.jsx
+  85:8  warning  React Hook useEffect has a missing dependency: 'markers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\HP\Desktop\tourism\src\components\ui\ImageReveal.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\OlaMap.jsx
+  17:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  15 |     useEffect(() => {
+  16 |         if (!OLA_MAPS_API_KEY) {
+> 17 |             setErrorMsg('Ola Maps API key missing in .env');
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  18 |             setMapError(true);
+  19 |             return;
+  20 |         }  react-hooks/set-state-in-effect
+  88:8   warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-hooks/exhaustive-deps
+  88:9   warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+  88:20  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\HP\Desktop\tourism\src\components\ui\ParticleBackground.jsx
+  18:9  warning  Compilation Skipped: Inline `class` declarations are not supported
+
+Move class declarations outside of components/hooks.
+
+  16 |         let animFrameId;
+  17 |
+> 18 |         class Particle {
+     |         ^^^^^^^^^^^^^^^^
+> 19 |             constructor() {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |                 this.x = Math.random() * canvas.width;
+     ÔÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |             }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |         }
+     | ^^^^^^^^^^ Inline `class` declarations are not supported
+  45 |
+  46 |         for (let i = 0; i < particleCount; i++) {
+  47 |             particles.push(new Particle());
+
+  react-hooks/unsupported-syntax
+
+C:\Users\HP\Desktop\tourism\src\components\ui\ScrollProgress.jsx
+  1:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\SearchFilter.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\TrendMonitor.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\components\ui\TypewriterText.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\context\AuthContext.jsx
+   5:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       react-refresh/only-export-components
+  15:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  13 |         const storedUser = localStorage.getItem('tourism_user');
+  14 |         if (storedUser) {
+> 15 |             setUser(JSON.parse(storedUser));
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  16 |         }
+  17 |         setLoading(false);
+  18 |     }, []);  react-hooks/set-state-in-effect
+  36:34  error  'password' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\CulturalCircuits.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\CultureHub.jsx
+  1:10  error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\Destinations.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\FoodFinder.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u              no-unused-vars
+  8:12  error  'filter' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  8:20  error  'setFilter' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\ItineraryGenerator.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\LandingPage.jsx
+  1:10  error  'useRef' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\Login.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\Planner.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  63:80  error  'moods' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\Signup.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\TravelTools.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  84:26  error  'e' is defined but never used                                                  no-unused-vars
+  84:29  error  Empty block statement                                                          no-empty
+
+C:\Users\HP\Desktop\tourism\src\pages\TrendingPlaces.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\pages\TripPlanner.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+  11:13  error  'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\HP\Desktop\tourism\src\services\PlaceDataService.js
+  16:11  error  Empty block statement  no-empty
+  26:11  error  Empty block statement  no-empty
+
+C:\Users\HP\Desktop\tourism\src\services\aiOrchestrator.js
+   23:13  error  Empty block statement             no-empty
+   30:13  error  Empty block statement             no-empty
+  237:39  error  Unnecessary escape character: \[  no-useless-escape
+
+C:\Users\HP\Desktop\tourism\src\services\chennaiAgent.js
+  22:13  error  Empty block statement  no-empty
+
+C:\Users\HP\Desktop\tourism\src\services\gemini.js
+  6:94  error  'userKey' is defined but never used  no-unused-vars
+
+Ô£û 116 problems (108 errors, 8 warnings)
+

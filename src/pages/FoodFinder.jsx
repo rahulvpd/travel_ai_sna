@@ -58,7 +58,7 @@ const FoodFinder = () => {
     };
 
     return (
-        <div className="min-h-screen bg-bg-dark text-white relative">
+        <div className="min-h-screen bg-transparent text-white relative">
             <ParticleBackground />
             <Navbar />
 
@@ -79,13 +79,47 @@ const FoodFinder = () => {
                     </p>
                 </motion.div>
 
+                {/* Spice Level Filter Bar */}
+                <div className="flex flex-wrap justify-center gap-3 mb-10">
+                    {[
+                        { id: 'All', label: 'All Dishes', icon: '🍽️' },
+                        { id: 'sweet', label: 'Sweet / Mild', icon: '🍃' },
+                        { id: 'mild', label: 'Mild Spice', icon: '🌶️' },
+                        { id: 'medium', label: 'Medium Spice', icon: '🔥' },
+                        { id: 'spicy', label: 'Spicy 🔥🔥🔥', icon: '' },
+                    ].map(f => (
+                        <button
+                            key={f.id}
+                            onClick={() => setFilter(f.id)}
+                            className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all border flex items-center gap-2 ${filter === f.id
+                                ? 'bg-vibrant-gold text-black border-vibrant-gold shadow-[0_0_15px_rgba(255,204,0,0.3)]'
+                                : 'border-white/15 text-white/70 hover:border-white/30 hover:text-white hover:bg-white/5'
+                            }`}
+                        >
+                            {f.icon && <span>{f.icon}</span>} {f.label}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                    {foods.map((item, index) => (
+                    <AnimatePresence mode="popLayout">
+                    {foods
+                        .filter(item => {
+                            if (filter === 'All') return true;
+                            if (filter === 'sweet') return item.spiceLevel === 0;
+                            if (filter === 'mild') return item.spiceLevel === 1;
+                            if (filter === 'medium') return item.spiceLevel === 2;
+                            if (filter === 'spicy') return item.spiceLevel === 3;
+                            return true;
+                        })
+                        .map((item, index) => (
                         <motion.div
                             key={item.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
+                            layout
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ delay: index * 0.05, duration: 0.3 }}
                             className="bg-glass-white backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl group hover:border-vibrant-gold/30 transition-all duration-300"
                         >
                             <div className="h-64 overflow-hidden relative">
@@ -134,6 +168,7 @@ const FoodFinder = () => {
                             </div>
                         </motion.div>
                     ))}
+                    </AnimatePresence>
                 </div>
 
                 {/* PDF Requirement: Food Spice Guidance */}

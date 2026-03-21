@@ -11,6 +11,8 @@ export default {
         'vibrant-pink': '#e6005c', // Lotus Pink
         'vibrant-gold': '#ffcc00', // Temple Top Gold
         'vibrant-orange': '#ff6600', // Marigold
+        'heritage-gold': '#D4AF37', // Antique Gold (Map borders & glow)
+        'heritage-terracotta': '#C96A2E', // Temple Terracotta
         'glass-white': 'rgba(255, 255, 255, 0.1)',
         'glass-black': 'rgba(0, 0, 0, 0.6)',
         'bg-dark': '#0f0f1a', // Deep Night Sky

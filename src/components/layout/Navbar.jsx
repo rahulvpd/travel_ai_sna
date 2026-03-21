@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Compass } from 'lucide-react';
+import { Menu, X, Compass, LogIn, LogOut, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,7 +20,9 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Destinations', path: '/destinations' },
+        { name: 'Explore', path: '/explore' },
+        { name: 'Trending', path: '/trending' },
+        { name: '🏛️ Circuits', path: '/circuits' },
         { name: 'Trip Planner', path: '/planner' },
         { name: 'Food & Culture', path: '/food' },
         { name: 'Travel Tools', path: '/tools' },
@@ -29,8 +33,8 @@ const Navbar = () => {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                ? 'bg-black/40 backdrop-blur-xl border-b border-white/10 shadow-[0_0_30px_rgba(255,204,0,0.2)]'
-                : 'bg-transparent'
+                ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_30px_rgba(255,204,0,0.2)]'
+                : 'bg-black/30 backdrop-blur-sm'
                 }`}
         >
             <div className="container mx-auto px-6 py-4">
@@ -74,6 +78,41 @@ const Navbar = () => {
                                 </motion.span>
                             </Link>
                         ))}
+
+                        {/* Auth Buttons */}
+                        {user ? (
+                            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-white/10">
+                                <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full border-2 border-vibrant-gold/50" />
+                                <span className="text-sm text-white/70 font-medium hidden lg:block">{user.name}</span>
+                                <button
+                                    onClick={logout}
+                                    className="flex items-center gap-1 text-sm text-white/60 hover:text-red-400 transition-colors"
+                                >
+                                    <LogOut size={16} />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-white/10">
+                                <Link to="/login">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white/80 hover:text-white border border-white/10 rounded-full hover:border-white/30 transition-all"
+                                    >
+                                        <LogIn size={14} /> Login
+                                    </motion.button>
+                                </Link>
+                                <Link to="/signup">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-black bg-vibrant-gold rounded-full hover:bg-white transition-all shadow-[0_0_15px_rgba(255,204,0,0.3)]"
+                                    >
+                                        <UserPlus size={14} /> Sign Up
+                                    </motion.button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -113,6 +152,24 @@ const Navbar = () => {
                                     </motion.div>
                                 </Link>
                             ))}
+
+                            {/* Mobile Auth */}
+                            <div className="pt-4 border-t border-white/10 space-y-3">
+                                {user ? (
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full border-2 border-vibrant-gold/50" />
+                                            <span className="text-white/70 font-medium">{user.name}</span>
+                                        </div>
+                                        <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="text-red-400 text-sm font-medium">Logout</button>
+                                    </div>
+                                ) : (
+                                    <div className="flex gap-3">
+                                        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 text-center py-2 border border-white/20 rounded-xl text-white/80 font-medium">Login</Link>
+                                        <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 text-center py-2 bg-vibrant-gold text-black rounded-xl font-bold">Sign Up</Link>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </motion.div>
                 )}

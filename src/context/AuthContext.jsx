@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -12,9 +13,13 @@ export const AuthProvider = ({ children }) => {
         // Check local storage for existing session
         const storedUser = localStorage.getItem('tourism_user');
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            setTimeout(() => {
+                setUser(JSON.parse(storedUser));
+                setLoading(false);
+            }, 0);
+        } else {
+            setTimeout(() => setLoading(false), 0);
         }
-        setLoading(false);
     }, []);
 
     const login = (email, password) => {
@@ -33,7 +38,7 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Invalid credentials' };
     };
 
-    const signup = (name, email, password) => {
+    const signup = (name, email) => {
         // Mock signup
         const userData = {
             id: Date.now(),
