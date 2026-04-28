@@ -6,27 +6,51 @@ import axios from 'axios';
 export const generateItinerary = async (destination, travelers, budget, interests, duration) => {
   try {
     // Call the new FastAPI Production Backend
-    const response = await axios.post('http://localhost:8000/api/itinerary/generate', {
+    const response = await axios.post('http://localhost:8000/itinerary/generate', {
       destination,
       travelers,
       budget,
       interests: interests || ['General sightseeing'],
-      duration: duration || 3
+      days: duration || 3
     });
 
     const data = response.data;
 
     // Map the FastAPI response into the format expected by the frontend
+    const groupedDays = [];
+    const items = data.items || [];
+    const dayMap = {};
+    
+    items.forEach(item => {
+      if (!dayMap[item.day]) {
+        dayMap[item.day] = {
+          day: item.day,
+          theme: `Exploring ${data.destination}`,
+          activities: []
+        };
+      }
+      dayMap[item.day].activities.push({
+        time: item.time_of_day,
+        title: item.activity_name,
+        description: item.notes,
+        type: 'attraction',
+        latitude: item.latitude,
+        longitude: item.longitude
+      });
+    });
+    
+    Object.keys(dayMap).sort().forEach(d => groupedDays.push(dayMap[d]));
+
     return {
-      days: data.plan_data.days,
+      days: groupedDays,
       travelAIMetrics: {
-        esiScore: data.esi_score || 24,
-        ecoScore: data.eco_score || 'A',
-        fatigueIndex: data.fatigue_index || 4
+        esiScore: data.green_score || 24,
+        ecoScore: 'A',
+        fatigueIndex: 4
       },
-      llmSummary: data.llm_summary,
-      centerCoordinates: { lat: 10.826, lng: 78.678 }, // Fallback center
-      totalEstimatedCost: budget,
+      llmSummary: data.summary,
+      centerCoordinates: items.length > 0 ? { lat: items[0].latitude, lng: items[0].longitude } : { lat: 10.826, lng: 78.678 },
+      totalEstimatedCost: data.total_cost,
       bestTimeToVisit: 'Year-round',
       tips: ['Enjoy your AI-planned journey'],
       emergencyContacts: {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:8000';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -21,8 +21,12 @@ export const placeService = {
 };
 
 export const itineraryService = {
-  generatePlan: (params) => api.post('/itineraries', params),
-  getHistory: () => api.get('/itineraries'),
+  generatePlan: (params) => api.post('/itinerary/generate', params),
+  getHistory: () => api.get('/itinerary/list'),
+};
+
+export const aiService = {
+  nvidiaChat: (params) => api.post('/ai/nvidia/chat', params),
 };
 
 export default api;

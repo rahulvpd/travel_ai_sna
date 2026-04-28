@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil Nadu Tourism AI - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center">
+    <div class="text-center p-10">
+        <h1 class="text-5xl font-bold text-yellow-400 mb-4">🏛️ Tamil Nadu Tourism AI</h1>
+        <p class="text-white/70 mb-8">AI-Powered Heritage Intelligence Platform</p>
+        
+        <div class="bg-white/10 backdrop-blur rounded-2xl p-8 mb-8">
+            <h2 class="text-white text-xl mb-4">Select Your Destination</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="http://localhost:5173" class="bg-yellow-500/20 hover:bg-yellow-500/40 border border-yellow-500/50 rounded-xl p-4 transition-all">
+                    <div class="text-3xl mb-2">🏠</div>
+                    <div class="text-white font-semibold">Home</div>
+                    <div class="text-white/50 text-sm">Landing Page</div>
+                </a>
+                
+                <a href="http://localhost:5173/destinations" class="bg-blue-500/20 hover:bg-blue-500/40 border border-blue-500/50 rounded-xl p-4 transition-all">
+                    <div class="text-3xl mb-2">🗺️</div>
+                    <div class="text-white font-semibold">All Districts</div>
+                    <div class="text-white/50 text-sm">38 Districts</div>
+                </a>
+                
+                <a href="http://localhost:5173/destinations/chn" class="bg-purple-500/20 hover:bg-purple-500/40 border border-purple-500/50 rounded-xl p-4 transition-all">
+                    <div class="text-3xl mb-2">🏛️</div>
+                    <div class="text-white font-semibold">Chennai</div>
+                    <div class="text-white/50 text-sm">Enhanced SNA</div>
+                </a>
+                
+                <a href="http://localhost:5173/planner" class="bg-pink-500/20 hover:bg-pink-500/40 border border-pink-500/50 rounded-xl p-4 transition-all">
+                    <div class="text-3xl mb-2">✈️</div>
+                    <div class="text-white font-semibold">Trip Planner</div>
+                    <div class="text-white/50 text-sm">AI Itinerary</div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="text-white/50 text-sm">
+            <p>✅ Version 3.0 - All Features Implemented</p>
+            <p>Enhanced SNA • Phase 2 • MCP Servers</p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-redirect to main site after 3 seconds
+        setTimeout(() => {
+            window.location.href = 'http://localhost:5173';
+        }, 3000);
+    </script>
+</body>
+</html>

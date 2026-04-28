@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tamilnadu-tourism": {
+      "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"],
+      "cwd": "C:\\Users\\HP\\Desktop\\tourism\\backend"
+    }
+  }
+}

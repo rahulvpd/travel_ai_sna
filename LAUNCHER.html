@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tamil Nadu Tourism AI - Launcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #FFCC00;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #fff;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #FFCC00, #FF6B00);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,204,0,0.4);
+        }
+        .links {
+            margin-top: 30px;
+        }
+        .links a {
+            color: #4F8EFF;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            border-radius: 10px;
+            color: #10b981;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Tamil Nadu Tourism AI</h1>
+        <p class="subtitle">AI-Powered Heritage Intelligence Platform</p>
+        
+        <div class="status">✅ Server Running</div>
+        
+        <div style="margin-top: 30px;">
+            <a href="http://localhost:5173" class="btn">🚀 Open Website</a>
+        </div>
+        
+        <div class="links">
+            <a href="http://localhost:5173/destinations/chn">📍 Chennai</a>
+            <a href="http://localhost:5173/planner">🗺️ Trip Planner</a>
+            <a href="http://localhost:5173/food">🍽️ Food Finder</a>
+        </div>
+        
+        <p style="color: rgba(255,255,255,0.5); margin-top: 30px; font-size: 0.9em;">
+            Version 3.0 | All Features Implemented<br>
+            Enhanced SNA • Phase 2 Visualizations • MCP Servers
+        </p>
+    </div>
+    
+    <script>
+        // Auto-open main site after 2 seconds
+        setTimeout(() => {
+            window.location.href = 'http://localhost:5173';
+        }, 2000);
+    </script>
+</body>
+</html>

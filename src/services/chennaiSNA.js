@@ -4,6 +4,7 @@
 // Cache: 48hr localStorage TTL
 
 import { dynastyHex } from '../utils/dynastyColors.js';
+import { queryNvidiaJSON } from './nvidiaService.js';
 
 const SNA_CACHE_KEY = 'chennai_sna_v2';
 const TTL = 48 * 60 * 60 * 1000; // 48 hours
@@ -440,30 +441,14 @@ Respond ONLY with valid JSON, no markdown fences:
 
   // Try NVIDIA Nemotron first
   try {
-    const key = import.meta.env.VITE_NVIDIA_API_KEY;
-    const model = import.meta.env.VITE_NVIDIA_MODEL || 'nvidia/llama-3.1-nemotron-70b-instruct';
-    if (key && !key.includes('your_') && !key.includes('placeholder') && key.length > 10) {
-      const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${key}`,
-        },
-        body: JSON.stringify({
-          model,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.2,
-          max_tokens: 1200,
-          stream: false,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const text = data.choices[0]?.message?.content || '';
-        const cleaned = text.replace(/```json|```/g, '').trim();
-        const parsed = JSON.parse(cleaned);
-        return { ...parsed, engine: `NVIDIA/${model}` };
-      }
+    const parsed = await queryNvidiaJSON(prompt, undefined, {
+      temperature: 0.2,
+      max_tokens: 1200,
+      reasoning_budget: 4096,
+      enable_thinking: true,
+    });
+    if (parsed) {
+      return { ...parsed, engine: 'NVIDIA Proxy' };
     }
   } catch { /* fall through */ }
 

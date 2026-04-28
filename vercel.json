@@ -1,8 +1,24 @@
 {
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/index.html"
-        }
-    ]
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://travel-ai-tamil-nadu.vercel.app/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "@api-url"
+  },
+  "build": {
+    "env": {
+      "VITE_GEMINI_API_KEY": "@gemini-api-key",
+      "VITE_GROQ_API_KEY": "@groq-api-key",
+      "VITE_OLA_MAPS_API_KEY": "@ola-maps-api-key",
+      "VITE_NVIDIA_API_KEY": "@nvidia-api-key",
+      "VITE_API_URL": "@api-url"
+    }
+  }
 }

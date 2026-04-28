@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Users, Calendar, ArrowRight, Check, Sparkles, Loader, Utensils, Music, Briefcase, ListTodo, Globe, Save, Share2, Star, Hotel, Clock, Search, X } from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { generateItinerary } from '../services/gemini';
+import { generateItinerary as generateGeminiPlan } from '../services/gemini';
 import Map from '../components/Map';
 import { useLocation } from 'react-router-dom';
 import { DISTRICTS } from '../data/districts';
@@ -12,7 +12,8 @@ import { itineraryService } from '../services/api';
 import FoodSection from '../components/planner/FoodSection';
 import CultureSection from '../components/planner/CultureSection';
 import ToolsSection from '../components/planner/ToolsSection';
-import SocialDashboard from '../components/planner/SocialDashboard';
+import GenerativeNetworkMap from '../components/planner/GenerativeNetworkMap';
+import TripSNAPanel from '../components/tripplanner/TripSNAPanel';
 
 const interestOptions = [
     { id: 'temples', label: 'Temples', icon: '🛕' },
@@ -170,8 +171,22 @@ const Planner = () => {
             setStep(2);
             setActiveTab('itinerary');
         } catch (err) {
-            setError("Failed to generate itinerary. Please try again.");
-            console.error(err);
+            console.error("Backend failed, falling back to Gemini service:", err);
+            try {
+                const fallbackData = await generateGeminiPlan(
+                    formData.destination,
+                    formData.travelers,
+                    formData.budget,
+                    formData.interests,
+                    formData.duration
+                );
+                setItinerary(fallbackData);
+                setStep(2);
+                setActiveTab('itinerary');
+            } catch (fallbackErr) {
+                setError("Failed to generate itinerary. Please check your connection.");
+                console.error(fallbackErr);
+            }
         } finally {
             setLoading(false);
         }
@@ -211,6 +226,33 @@ const Planner = () => {
     ).filter(m => m.lat && m.lng) || [];
 
     const center = itinerary?.centerCoordinates || (markers[0] ? { lat: markers[0].lat, lng: markers[0].lng } : null);
+
+    const selectedPlaces = useMemo(() => {
+        const seen = new Set();
+
+        return (itinerary?.days || [])
+            .flatMap(day => day.activities || [])
+            .map(act => {
+                const name = act.title || act.name;
+                const lat = act.location?.lat || act.latitude;
+                const lng = act.location?.lng || act.longitude;
+                const key = `${String(name || '').toLowerCase()}|${lat || ''}|${lng || ''}`;
+
+                if (!name || seen.has(key)) {
+                    return null;
+                }
+
+                seen.add(key);
+
+                return {
+                    name,
+                    lat,
+                    lng,
+                    destination: formData.destination,
+                };
+            })
+            .filter(Boolean);
+    }, [formData.destination, itinerary]);
 
     const tabs = [
         { id: 'itinerary', label: 'Plan', icon: ListTodo },
@@ -579,7 +621,13 @@ const Planner = () => {
 
                                         {activeTab === 'social' && (
                                             <motion.div key="social" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                                                <SocialDashboard />
+                                                <GenerativeNetworkMap 
+                                                    destination={formData.destination} 
+                                                    items={(itinerary?.days || []).flatMap(day => day.activities || [])}
+                                                    budget={formData.budget}
+                                                    travelers={formData.travelers}
+                                                    interests={formData.interests}
+                                                />
                                             </motion.div>
                                         )}
                                         {activeTab === 'food' && (
@@ -598,6 +646,10 @@ const Planner = () => {
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
+                                </div>
+
+                                <div className="pt-6">
+                                    <TripSNAPanel selectedPlaces={selectedPlaces} />
                                 </div>
                             </motion.div>
                         )}

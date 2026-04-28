@@ -1,0 +1,87 @@
+{
+  "_comment": "Copy the appropriate section to your MCP client config file",
+  
+  "claude_desktop_windows": {
+    "_config_path": "%APPDATA%\\Claude\\claude_desktop_config.json",
+    "_comment": "Claude Desktop on Windows - paste the mcpServers section",
+    "mcpServers": {
+      "tamilnadu-tourism": {
+        "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+        "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"],
+        "_description": "Tamil Nadu Tourism MCP Server - heritage sites, attractions, trip planning"
+      }
+    }
+  },
+
+  "cursor_windows": {
+    "_config_path": "%USERPROFILE%\\.cursor\\mcp.json",
+    "_comment": "Cursor IDE on Windows - paste the mcpServers section",
+    "mcpServers": {
+      "tamilnadu-tourism": {
+        "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+        "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"]
+      }
+    }
+  },
+
+  "windsurf_windows": {
+    "_config_path": "%USERPROFILE%\\.windsurf\\mcp.json",
+    "_comment": "Windsurf IDE on Windows - paste the mcpServers section",
+    "mcpServers": {
+      "tamilnadu-tourism": {
+        "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+        "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"]
+      }
+    }
+  },
+
+  "vscode_mcp_extension": {
+    "_config_path": ".vscode/settings.json",
+    "_comment": "VS Code with MCP extension - add to workspace settings",
+    "mcp.servers": {
+      "tamilnadu-tourism": {
+        "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+        "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"]
+      }
+    }
+  },
+
+  "continue_extension": {
+    "_config_path": "~/.continue/config.json",
+    "_comment": "Continue VS Code extension - add to config",
+    "experimental": {
+      "modelContextProtocol": {
+        "servers": {
+          "tamilnadu-tourism": {
+            "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+            "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"]
+          }
+        }
+      }
+    }
+  },
+
+  "alternative_python_path": {
+    "_comment": "If using system Python instead of venv, use these paths",
+    "mcpServers": {
+      "tamilnadu-tourism": {
+        "command": "python",
+        "args": ["C:\\Users\\HP\\Desktop\\tourism\\backend\\mcp_server.py"],
+        "env": {
+          "PYTHONPATH": "C:\\Users\\HP\\Desktop\\tourism\\backend"
+        }
+      }
+    }
+  },
+
+  "with_working_directory": {
+    "_comment": "Alternative configuration specifying working directory",
+    "mcpServers": {
+      "tamilnadu-tourism": {
+        "command": "C:\\Users\\HP\\Desktop\\tourism\\.venv\\Scripts\\python.exe",
+        "args": ["mcp_server.py"],
+        "cwd": "C:\\Users\\HP\\Desktop\\tourism\\backend"
+      }
+    }
+  }
+}

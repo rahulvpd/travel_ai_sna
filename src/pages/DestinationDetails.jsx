@@ -30,6 +30,8 @@ import ChennaiSNAForceGraph from '../components/chennai/ChennaiSNAForceGraph';
 import ChennaiSNADashboard from '../components/chennai/ChennaiSNADashboard';
 import ChennaiSNAInsights from '../components/chennai/ChennaiSNAInsights';
 import ChennaiSNASection from '../components/chennai/ChennaiSNASection';
+import ChennaiSNAEnhancedSection from '../components/chennai/ChennaiSNAEnhancedSection';
+import ChennaiSNAPhase2Section from '../components/chennai/ChennaiSNAPhase2Section';
 
 const DestinationDetails = () => {
     const { id } = useParams();
@@ -49,9 +51,10 @@ const DestinationDetails = () => {
     const [chennaiInsightsData, setChennaiInsightsData] = useState(null);
     const [loadingChennai, setLoadingChennai] = useState(false);
 
-    // CHENNAI SNA STATE
-    const [snaData, setSnaData] = useState(null);
-    const [activeSnaTab, setActiveSnaTab] = useState('map'); // map, graph, metrics, insights
+  // CHENNAI SNA STATE
+  const [snaData, setSnaData] = useState(null);
+  const [activeSnaTab, setActiveSnaTab] = useState('map'); // map, graph, metrics, insights
+  const [useEnhancedSNA, setUseEnhancedSNA] = useState(true); // toggle between basic and enhanced
 
     // Translation State for Chennai Insights
     const [tamilMode, setTamilMode] = useState(false);
@@ -1214,11 +1217,55 @@ const DestinationDetails = () => {
                 const availableDynasties = [...new Set(allPlaces.map(p => p.dynasty).filter(Boolean))];
                 const availableTypes = [...new Set(allPlaces.map(p => p.placeType).filter(Boolean))];
 
-return (
-<div className="max-w-7xl mx-auto px-4 lg:px-8 pb-16 space-y-8">
+  return (
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 pb-16 space-y-8">
 
-{/* ── SNA HERITAGE NETWORK — FIRST SECTION ── */}
-<ChennaiSNASection />
+      {/* ── SNA HERITAGE NETWORK — FIRST SECTION ── */}
+      {/* Toggle between Basic and Enhanced SNA */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-white/40 uppercase tracking-widest">SNA Mode:</span>
+          <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+            <button
+              onClick={() => setUseEnhancedSNA(false)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                !useEnhancedSNA
+                  ? 'bg-white/10 text-white'
+                  : 'text-white/50 hover:text-white'
+              }`}
+            >
+              📊 Basic
+            </button>
+            <button
+              onClick={() => setUseEnhancedSNA(true)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                useEnhancedSNA
+                  ? 'bg-vibrant-gold text-black'
+                  : 'text-white/50 hover:text-white'
+              }`}
+            >
+              ✨ Enhanced
+            </button>
+          </div>
+        </div>
+        {useEnhancedSNA && (
+          <span className="text-xs bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30">
+            🆕 Tourism Metrics + Circuits
+          </span>
+        )}
+      </div>
+
+      {/* Conditional SNA Section Rendering */}
+      {useEnhancedSNA ? (
+        <ChennaiSNAEnhancedSection />
+      ) : (
+        <ChennaiSNASection />
+      )}
+
+      {/* Phase 2 Section - Advanced Visualizations */}
+      {useEnhancedSNA && (
+        <ChennaiSNAPhase2Section />
+      )}
 
 {/* SECTION: SNA Heritage Network (v6.0) */}
                         <div className="bg-black/40 border border-white/10 rounded-2xl p-6 backdrop-blur-xl">

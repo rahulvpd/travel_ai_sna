@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelAI Tamil Nadu — Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;600;700&family=Google+Sans+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1A73E8;--blue2:#4285F4;--green:#34A853;
+  --yellow:#FBBC04;--red:#EA4335;--purple:#9334E6;
+  --teal:#00BCD4;--surface:#1C1C2E;--bg:#0D0D1A;
+  --glass:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.12);
+  --text:#F8F9FA;--muted:rgba(255,255,255,0.5);
+  --card:rgba(28,28,46,0.85);
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Google Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+}
+
+/* ── 3D CANVAS ── */
+#three-canvas{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;
+}
+
+/* ── SLIDE SYSTEM ── */
+.slide{
+  display:none;position:relative;z-index:10;
+  height:100vh;width:100vw;
+  overflow:hidden;
+}
+.slide.active{
+  display:grid;
+  animation:slideAppear .6s cubic-bezier(.16,1,.3,1);
+}
+@keyframes slideAppear{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── BACKGROUND IMAGES per slide ── */
+.slide-bg{
+  position:absolute;inset:0;z-index:0;
+  background-size:cover;background-position:center;
+  transition:opacity 1s;
+}
+.slide-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(
+    135deg,
+    rgba(13,13,26,0.92) 0%,
+    rgba(13,13,26,0.75) 50%,
+    rgba(13,13,26,0.88) 100%
+  );
+}
+/* Each slide bg image */
+#s1 .slide-bg{background-image:url('https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=1600');}
+#s2 .slide-bg{background-image:url('https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=1600');}
+#s3 .slide-bg{background-image:url('https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=1600');}
+#s4 .slide-bg{background-image:url('https://images.unsplash.com/photo-1605649461784-edc3fdecdec5?q=80&w=1600');}
+#s5 .slide-bg{background-image:url('https://images.unsplash.com/photo-1567361808960-dec9cb578182?q=80&w=1600');}
+#s6 .slide-bg{background-image:url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=1600');}
+
+/* ── SLIDE CONTENT WRAPPER ── */
+.slide-content{
+  position:relative;z-index:5;
+  padding:48px 64px 88px;
+  display:flex;flex-direction:column;justify-content:center;
+  height:100%;
+}
+
+/* ── GOOGLE MATERIAL 3 TYPOGRAPHY ── */
+.label-large{
+  font-size:12px;font-weight:500;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--yellow);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.label-large::before{
+  content:'';width:24px;height:2px;
+  background:linear-gradient(90deg,var(--yellow),transparent);
+}
+
+h1.display{
+  font-family:'Google Sans Display',sans-serif;
+  font-size:clamp(48px,7vw,88px);
+  font-weight:700;line-height:1.0;
+  letter-spacing:-2px;margin-bottom:8px;
+}
+h1.display span.accent{
+  background:linear-gradient(135deg,var(--yellow),var(--red));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+h2.headline{
+  font-family:'Google Sans Display',sans-serif;
+  font-size:clamp(30px,5vw,52px);
+  font-weight:600;line-height:1.15;
+  letter-spacing:-1px;margin-bottom:16px;
+}
+h2.headline .accent{
+  background:linear-gradient(135deg,var(--blue2),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+h2.headline .accent-y{
+  background:linear-gradient(135deg,var(--yellow),var(--red));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+h2.headline .accent-g{
+  background:linear-gradient(135deg,var(--green),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+
+.body-large{
+  font-size:16px;color:var(--muted);line-height:1.75;
+  max-width:620px;margin-bottom:28px;font-weight:300;
+}
+
+/* ── DIVIDER ── */
+.divider{
+  width:48px;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--blue2),var(--teal));
+  margin-bottom:24px;
+}
+
+/* ── GLASS CARDS ── */
+.g3-card{
+  background:rgba(28,28,46,0.7);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px 22px;
+  backdrop-filter:blur(20px);
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  position:relative;overflow:hidden;
+}
+.g3-card::before{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transition:opacity .3s;
+}
+.g3-card:hover{
+  transform:translateY(-4px) scale(1.01);
+  border-color:rgba(255,255,255,0.25);
+  background:rgba(40,40,60,0.8);
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+.g3-card-icon{font-size:22px;margin-bottom:10px;}
+.g3-card-title{font-size:13px;font-weight:600;margin-bottom:6px;letter-spacing:.2px;}
+.g3-card-body{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px;}
+.stat-card{
+  background:rgba(28,28,46,0.7);
+  border:1px solid var(--border);
+  border-radius:16px;padding:20px 16px;
+  text-align:center;backdrop-filter:blur(20px);
+  transition:all .3s;
+}
+.stat-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.25);}
+.stat-num{
+  font-family:'Google Sans Display',sans-serif;
+  font-size:36px;font-weight:700;line-height:1;
+  background:linear-gradient(135deg,var(--yellow),var(--red));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.5px;}
+
+/* ── CHIPS ── */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.chip{
+  padding:6px 14px;border-radius:20px;font-size:12px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.7);
+  transition:all .2s;font-weight:400;
+}
+.chip:hover{background:rgba(66,133,244,0.2);border-color:var(--blue2);color:var(--text);}
+
+/* ── GRID LAYOUTS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+/* ── PROBLEM CARDS ── */
+.prob-card{
+  background:rgba(28,28,46,0.7);
+  border:1px solid var(--border);
+  border-radius:20px;padding:22px;
+  backdrop-filter:blur(20px);
+  transition:all .3s;
+}
+.prob-card:hover{transform:translateY(-3px);}
+.prob-card:nth-child(1){border-top:2px solid var(--red);}
+.prob-card:nth-child(2){border-top:2px solid var(--blue2);}
+.prob-card:nth-child(3){border-top:2px solid var(--yellow);}
+.prob-card:nth-child(4){border-top:2px solid var(--green);}
+
+/* ── SNA NODES ── */
+.sna-node{
+  display:inline-block;padding:5px 14px;
+  border-radius:20px;font-size:11px;font-weight:500;
+  margin:3px;border:1px solid;letter-spacing:.3px;
+}
+.np{background:rgba(147,52,234,0.15);border-color:rgba(147,52,234,0.5);color:#c084fc;}
+.nc{background:rgba(251,188,4,0.15);border-color:rgba(251,188,4,0.5);color:#FDE68A;}
+.nn{background:rgba(66,133,244,0.15);border-color:rgba(66,133,244,0.5);color:#93C5FD;}
+.nb{background:rgba(100,116,139,0.15);border-color:rgba(100,116,139,0.5);color:#CBD5E1;}
+.nm{background:rgba(6,182,212,0.15);border-color:rgba(6,182,212,0.5);color:#67E8F9;}
+
+/* ── ENGINE ROWS ── */
+.eng-row{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(28,28,46,0.65);
+  border:1px solid var(--border);
+  border-radius:14px;padding:11px 18px;
+  margin-bottom:8px;
+  backdrop-filter:blur(16px);
+  transition:all .25s;
+}
+.eng-row:hover{
+  background:rgba(66,133,244,0.1);
+  border-color:rgba(66,133,244,0.3);
+  transform:translateX(4px);
+}
+.eng-dot{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;
+  background:rgba(66,133,244,0.2);color:var(--blue2);
+  border:1px solid rgba(66,133,244,0.3);
+}
+.eng-name{font-size:13px;font-weight:500;flex:1;}
+.eng-sub{font-size:11px;color:var(--muted);font-weight:300;}
+.eng-pill{
+  font-size:10px;padding:3px 10px;border-radius:12px;
+  background:rgba(66,133,244,0.15);
+  border:1px solid rgba(66,133,244,0.3);
+  color:var(--blue2);letter-spacing:.5px;
+}
+.eng-pill.ex{
+  background:rgba(52,168,83,0.15);
+  border-color:rgba(52,168,83,0.3);color:var(--green);
+}
+
+/* ── FUTURE ITEMS ── */
+.fut-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fut-item{
+  display:flex;gap:14px;
+  background:rgba(28,28,46,0.7);
+  border:1px solid var(--border);
+  border-radius:16px;padding:16px 18px;
+  backdrop-filter:blur(16px);
+  transition:all .3s;
+}
+.fut-item:hover{border-color:rgba(52,168,83,0.4);transform:translateY(-2px);}
+.fut-dot{
+  width:8px;height:8px;border-radius:50%;
+  flex-shrink:0;margin-top:6px;
+}
+.fut-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+.fut-desc{font-size:11px;color:var(--muted);line-height:1.6;font-weight:300;}
+
+/* ── TECH PILLS ── */
+.tech-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px;}
+.tech-pill{
+  font-size:11px;padding:4px 12px;border-radius:12px;
+  border:1px solid var(--border);color:var(--muted);
+  background:rgba(255,255,255,0.05);
+}
+.tc{border-color:rgba(0,188,212,0.4);color:var(--teal);}
+.tb{border-color:rgba(66,133,244,0.4);color:var(--blue2);}
+.tg{border-color:rgba(52,168,83,0.4);color:var(--green);}
+
+/* ── 3D FLOATING CARD (hero) ── */
+.hero-3d-card{
+  position:absolute;right:64px;top:50%;
+  transform:translateY(-50%);
+  width:300px;
+  background:rgba(28,28,46,0.75);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:24px;padding:24px;
+  backdrop-filter:blur(24px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 40px 80px rgba(0,0,0,0.5),
+    0 0 60px rgba(66,133,244,0.1);
+  animation:float3d 6s ease-in-out infinite;
+  z-index:20;
+}
+@keyframes float3d{
+  0%,100%{transform:translateY(-50%) rotate3d(1,.5,0,4deg);}
+  50%{transform:translateY(calc(-50% - 16px)) rotate3d(1,.5,0,-4deg);}
+}
+.h3d-label{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+.h3d-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.h3d-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  background:rgba(66,133,244,0.15);border:1px solid rgba(66,133,244,0.3);
+}
+.h3d-info{flex:1;}
+.h3d-title{font-size:12px;font-weight:600;}
+.h3d-sub{font-size:10px;color:var(--muted);}
+.h3d-bar{
+  height:4px;border-radius:2px;
+  background:linear-gradient(90deg,var(--blue2),var(--teal));
+  margin-top:4px;
+}
+.h3d-divider{height:1px;background:var(--border);margin:14px 0;}
+.h3d-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;}
+.h3d-stat-num{font-size:18px;font-weight:700;color:var(--yellow);}
+.h3d-stat-lbl{font-size:9px;color:var(--muted);}
+
+/* ── SNA GRAPH VISUAL ── */
+.sna-visual{
+  position:absolute;right:48px;top:50%;
+  transform:translateY(-50%);
+  width:280px;height:280px;
+  animation:floatSlow 8s ease-in-out infinite;
+}
+@keyframes floatSlow{
+  0%,100%{transform:translateY(-50%)}
+  50%{transform:translateY(calc(-50% - 12px))}
+}
+
+/* ── PROGRESS ── */
+.progress-bar{
+  position:fixed;top:0;left:0;right:0;height:3px;z-index:200;
+  background:rgba(255,255,255,0.05);
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--blue2),var(--teal),var(--green));
+  transition:width .5s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 0 10px rgba(66,133,244,0.6);
+}
+
+/* ── NAV ── */
+.nav-bar{
+  position:fixed;bottom:0;left:0;right:0;height:64px;
+  background:rgba(13,13,26,0.9);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;z-index:100;
+  backdrop-filter:blur(24px);
+}
+.nav-dots{
+  display:flex;gap:8px;
+  position:absolute;left:50%;transform:translateX(-50%);
+}
+.dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.2);
+  cursor:pointer;transition:all .3s;
+}
+.dot.active{
+  background:var(--blue2);border-color:var(--blue2);
+  transform:scale(1.4);
+  box-shadow:0 0 10px rgba(66,133,244,0.6);
+}
+.nav-btn{
+  font-family:'Google Sans',sans-serif;
+  font-size:13px;font-weight:500;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);
+  color:var(--text);padding:9px 24px;
+  border-radius:20px;cursor:pointer;
+  transition:all .2s;letter-spacing:.3px;
+}
+.nav-btn:hover{background:rgba(66,133,244,0.2);border-color:var(--blue2);}
+.nav-btn:disabled{opacity:.25;cursor:not-allowed;}
+.nav-counter{font-size:12px;color:var(--muted);}
+
+@media(max-width:768px){
+  .slide-content{padding:28px 24px 80px;}
+  .hero-3d-card,.sna-visual{display:none;}
+  .grid-2,.grid-3,.grid-4,.fut-row{grid-template-columns:1fr;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  h1.display{font-size:44px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="three-canvas"></canvas>
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<!-- ════ SLIDE 1 — HERO ════ -->
+<div class="slide active" id="s1">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large">Anna University · CEG Campus · March 2026</div>
+    <h1 class="display">TravelAI<br><span class="accent">Tamil Nadu</span></h1>
+    <div class="divider"></div>
+    <p class="body-large">
+      AI-powered cultural tourism intelligence platform — 7-engine LLM orchestration,
+      Social Network Analysis on 2,500 years of Tamil heritage,
+      and Sarvam AI Tamil language audio guides. Zero infrastructure cost.
+    </p>
+    <div class="chip-row">
+      <div class="chip">React 19 + Vite 7</div>
+      <div class="chip">7 LLM Engines</div>
+      <div class="chip">Sarvam AI · Tamil TTS</div>
+      <div class="chip">Social Network Analysis</div>
+      <div class="chip">Vercel Deployed</div>
+      <div class="chip">Free Tier APIs Only</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">38</div><div class="stat-lbl">Districts</div></div>
+      <div class="stat-card"><div class="stat-num">300+</div><div class="stat-lbl">Curated Places</div></div>
+      <div class="stat-card"><div class="stat-num">7</div><div class="stat-lbl">AI Engines</div></div>
+      <div class="stat-card"><div class="stat-num">14</div><div class="stat-lbl">App Routes</div></div>
+    </div>
+  </div>
+  <!-- Floating 3D card -->
+  <div class="hero-3d-card">
+    <div class="h3d-label">Live AI Status</div>
+    <div class="h3d-row">
+      <div class="h3d-icon">🤖</div>
+      <div class="h3d-info">
+        <div class="h3d-title">AI Orchestrator</div>
+        <div class="h3d-sub">7 engines active</div>
+        <div class="h3d-bar" style="width:100%"></div>
+      </div>
+    </div>
+    <div class="h3d-row">
+      <div class="h3d-icon">🔊</div>
+      <div class="h3d-info">
+        <div class="h3d-title">Sarvam AI</div>
+        <div class="h3d-sub">Tamil TTS · Mayura v1</div>
+        <div class="h3d-bar" style="width:80%;background:linear-gradient(90deg,#9334E6,#06B6D4)"></div>
+      </div>
+    </div>
+    <div class="h3d-row">
+      <div class="h3d-icon">🗺️</div>
+      <div class="h3d-info">
+        <div class="h3d-title">Map Services</div>
+        <div class="h3d-sub">Ola Maps + Leaflet OSM</div>
+        <div class="h3d-bar" style="width:90%;background:linear-gradient(90deg,#34A853,#FBBC04)"></div>
+      </div>
+    </div>
+    <div class="h3d-divider"></div>
+    <div class="h3d-stat-row">
+      <div><div class="h3d-stat-num">24h</div><div class="h3d-stat-lbl">Cache TTL</div></div>
+      <div><div class="h3d-stat-num">0₹</div><div class="h3d-stat-lbl">Infra Cost</div></div>
+      <div><div class="h3d-stat-num">99%</div><div class="h3d-stat-lbl">Uptime</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SLIDE 2 — PROBLEM ════ -->
+<div class="slide" id="s2">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large" style="color:var(--red)">01 · Problem Statement</div>
+    <h2 class="headline">What's <span class="accent-y">missing</span> in<br>Tamil Nadu tourism?</h2>
+    <div class="divider" style="background:linear-gradient(90deg,var(--red),transparent)"></div>
+    <p class="body-large" style="margin-bottom:20px">Existing platforms solve logistics — booking, routing, pricing. None deliver cultural intelligence or make heritage relationships queryable.</p>
+    <div class="grid-2">
+      <div class="prob-card g3-card">
+        <div class="g3-card-icon">🏛️</div>
+        <div class="g3-card-title">No heritage depth</div>
+        <div class="g3-card-body">Visitors book hotels near Brihadeeswarar but cannot learn who built it, which dynasty, or how it connects to 40 other Chola temples across the Kaveri delta.</div>
+      </div>
+      <div class="prob-card g3-card">
+        <div class="g3-card-icon">🕸️</div>
+        <div class="g3-card-title">Unmodelled relationships</div>
+        <div class="g3-card-body">300+ heritage sites connected by dynasty, architecture, and tradition — never structured or made queryable. The network is invisible to travellers.</div>
+      </div>
+      <div class="prob-card g3-card">
+        <div class="g3-card-icon">🗣️</div>
+        <div class="g3-card-title">No Tamil language access</div>
+        <div class="g3-card-body">80M+ Tamil speakers globally. Zero tourism platforms deliver heritage content natively in Tamil with audio guides, transliteration, and Tamil script names.</div>
+      </div>
+      <div class="prob-card g3-card">
+        <div class="g3-card-icon">🤖</div>
+        <div class="g3-card-title">Generic AI responses</div>
+        <div class="g3-card-body">General LLMs give surface travel tips. No platform uses specialised prompting for dynastically accurate, architecturally rigorous heritage intelligence.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SLIDE 3 — SNA ════ -->
+<div class="slide" id="s3">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large" style="color:var(--teal)">02 · Social Network Analysis</div>
+    <h2 class="headline">Heritage as a<br><span class="accent">knowledge graph</span></h2>
+    <div class="divider" style="background:linear-gradient(90deg,var(--teal),transparent)"></div>
+    <p class="body-large" style="margin-bottom:18px">SNA applied to Tamil Nadu's 2,500-year heritage — sites as nodes, shared dynasty/style/tradition as typed edges.</p>
+    <div class="grid-2">
+      <div class="g3-card">
+        <div style="font-size:10px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Nodes — 300+ sites</div>
+        <div class="g3-card-body" style="margin-bottom:12px">Each heritage site is a node with: dynasty, period, architectural style, ASI/UNESCO status, significance statement.</div>
+        <div>
+          <span class="sna-node np">Mahabalipuram</span>
+          <span class="sna-node nc">Brihadeeswarar</span>
+          <span class="sna-node nn">Meenakshi Temple</span>
+          <span class="sna-node nb">Fort St. George</span>
+          <span class="sna-node nm">Marina Beach</span>
+        </div>
+      </div>
+      <div class="g3-card">
+        <div style="font-size:10px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Typed edges</div>
+        <div style="font-size:12px;color:var(--muted);line-height:2;font-weight:300">
+          <div>🔗 Kapaleeshwarar → Parthasarathy <span style="color:var(--yellow);font-size:10px">[Mylapore tradition]</span></div>
+          <div>🔗 Fort St. George → Chepauk Palace <span style="color:var(--yellow);font-size:10px">[British Colonial]</span></div>
+          <div>🔗 Brihadeeswarar → Gangaikonda <span style="color:var(--yellow);font-size:10px">[Chola dynasty]</span></div>
+          <div>🔗 Shore Temple → Kailasanathar <span style="color:var(--yellow);font-size:10px">[Pallava architecture]</span></div>
+        </div>
+      </div>
+      <div class="g3-card">
+        <div style="font-size:10px;color:var(--yellow);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Centrality analysis</div>
+        <div class="g3-card-body">Degree centrality reveals Brihadeeswarar as highest-centrality hub — connecting the entire Chola architectural cluster across the Kaveri delta.</div>
+      </div>
+      <div class="g3-card">
+        <div style="font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px">Community detection</div>
+        <div class="g3-card-body" style="margin-bottom:10px">4 dynastically coherent sub-networks → directly powers Cultural Circuits page + Dynasty Filter Bar.</div>
+        <div>
+          <span class="sna-node np">Pallava cluster</span>
+          <span class="sna-node nc">Chola cluster</span>
+          <span class="sna-node nn">Pandya cluster</span>
+          <span class="sna-node nb">Colonial cluster</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SVG network graph float -->
+  <div class="sna-visual">
+    <svg width="280" height="280" viewBox="0 0 280 280">
+      <defs>
+        <radialGradient id="ng1"><stop offset="0%" stop-color="#a855f7" stop-opacity=".8"/><stop offset="100%" stop-color="#a855f7" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ng2"><stop offset="0%" stop-color="#FBBC04" stop-opacity=".9"/><stop offset="100%" stop-color="#FBBC04" stop-opacity="0"/></radialGradient>
+        <radialGradient id="ng3"><stop offset="0%" stop-color="#4285F4" stop-opacity=".8"/><stop offset="100%" stop-color="#4285F4" stop-opacity="0"/></radialGradient>
+      </defs>
+      <!-- glow bg -->
+      <circle cx="140" cy="140" r="100" fill="url(#ng2)" opacity=".15"/>
+      <!-- edges -->
+      <line x1="140" y1="140" x2="80" y2="80" stroke="rgba(251,188,4,0.3)" stroke-width="1"/>
+      <line x1="140" y1="140" x2="200" y2="80" stroke="rgba(66,133,244,0.3)" stroke-width="1"/>
+      <line x1="140" y1="140" x2="60" y2="170" stroke="rgba(147,52,234,0.3)" stroke-width="1"/>
+      <line x1="140" y1="140" x2="220" y2="170" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+      <line x1="140" y1="140" x2="140" y2="210" stroke="rgba(52,168,83,0.3)" stroke-width="1"/>
+      <line x1="80" y1="80" x2="200" y2="80" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+      <line x1="60" y1="170" x2="140" y2="210" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+      <line x1="220" y1="170" x2="140" y2="210" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+      <!-- center hub -->
+      <circle cx="140" cy="140" r="18" fill="rgba(251,188,4,0.2)" stroke="rgba(251,188,4,0.6)" stroke-width="1.5"/>
+      <circle cx="140" cy="140" r="8" fill="#FBBC04"/>
+      <!-- outer nodes -->
+      <circle cx="80" cy="80" r="10" fill="#a855f7" opacity=".8"/>
+      <circle cx="200" cy="80" r="10" fill="#4285F4" opacity=".8"/>
+      <circle cx="60" cy="170" r="10" fill="#a855f7" opacity=".6"/>
+      <circle cx="220" cy="170" r="10" fill="#06B6D4" opacity=".8"/>
+      <circle cx="140" cy="210" r="10" fill="#34A853" opacity=".8"/>
+      <!-- labels -->
+      <text x="140" y="136" text-anchor="middle" fill="#FBBC04" font-size="7" font-weight="600">HUB</text>
+      <text x="80" y="98" text-anchor="middle" fill="#c084fc" font-size="7">Pallava</text>
+      <text x="200" y="98" text-anchor="middle" fill="#93C5FD" font-size="7">Chola</text>
+      <text x="55" y="188" text-anchor="middle" fill="#c084fc" font-size="7">Pandya</text>
+      <text x="225" y="188" text-anchor="middle" fill="#67E8F9" font-size="7">Nayak</text>
+      <text x="140" y="228" text-anchor="middle" fill="#86EFAC" font-size="7">Colonial</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ════ SLIDE 4 — AI PIPELINE ════ -->
+<div class="slide" id="s4">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large" style="color:var(--blue2)">03 · AI Architecture</div>
+    <h2 class="headline">7-Engine <span class="accent">Orchestration</span> Pipeline</h2>
+    <div class="divider"></div>
+    <p class="body-large" style="margin-bottom:16px">Fault-tolerant fallback chain. Each engine connects to the next by a conditional failure edge. All free-tier APIs.</p>
+    <div>
+      <div class="eng-row"><div class="eng-dot">1</div><div><div class="eng-name">Google Gemini 2.0 Flash</div><div class="eng-sub">Best cultural knowledge · Tamil Nadu context</div></div><div class="eng-pill ex">Primary</div></div>
+      <div class="eng-row"><div class="eng-dot">2</div><div><div class="eng-name">Groq + Llama 4 Scout 17B</div><div class="eng-sub">Ultra-fast inference · Low latency</div></div><div class="eng-pill ex">Existing</div></div>
+      <div class="eng-row"><div class="eng-dot">3</div><div><div class="eng-name">Mistral AI — mistral-small-latest</div><div class="eng-sub">Strong multilingual · Indic cultural context</div></div><div class="eng-pill">New v5</div></div>
+      <div class="eng-row"><div class="eng-dot">4</div><div><div class="eng-name">OpenRouter — Llama 3.3 70B</div><div class="eng-sub">50+ free models via one API key</div></div><div class="eng-pill">New v5</div></div>
+      <div class="eng-row"><div class="eng-dot">5</div><div><div class="eng-name">Together AI — Llama 3.3 70B Turbo</div><div class="eng-sub">Excellent structured JSON output · Fast</div></div><div class="eng-pill">New v5</div></div>
+      <div class="eng-row"><div class="eng-dot">6</div><div><div class="eng-name">Cohere Command R+</div><div class="eng-sub">RAG-style heritage factual queries</div></div><div class="eng-pill">New v5</div></div>
+      <div class="eng-row"><div class="eng-dot">7</div><div><div class="eng-name">HuggingFace — Meta-Llama-3-8B</div><div class="eng-sub">Always-available open source fallback</div></div><div class="eng-pill ex">Fallback</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SLIDE 5 — FEATURES ════ -->
+<div class="slide" id="s5">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large" style="color:var(--green)">04 · Platform Features</div>
+    <h2 class="headline">Tech Stack &amp; <span class="accent-g">Key Features</span></h2>
+    <div class="divider" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
+    <p class="body-large" style="margin-bottom:16px">v5.0 is purely additive — zero removals, zero breaking changes.</p>
+    <div class="grid-3">
+      <div class="g3-card"><div class="g3-card-icon">🗺️</div><div class="g3-card-title">Dual Map System</div><div class="g3-card-body">Ola Maps primary (India-optimised). Leaflet + OpenStreetMap free fallback. Connected Heritage Map shows SNA-derived site networks.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">🔊</div><div class="g3-card-title">Sarvam AI Audio Guide</div><div class="g3-card-body">Tamil TTS via Bulbul v1 (Meera voice). Every place gets a Tamil audio guide. Tamil script + Roman transliteration under all place names.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">🤖</div><div class="g3-card-title">Chennai AI Agent</div><div class="g3-card-body">Autonomous agent running 6 parallel AI sub-queries per site — architecture, dynasty, arts, visitor intel, neighbourhood, street food.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">📸</div><div class="g3-card-title">Rich Media Layer</div><div class="g3-card-body">Multi-image galleries + fullscreen lightbox. YouTube documentary strip with in-app modal player. 360° virtual tour links.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">🏛️</div><div class="g3-card-title">Knowledge Panels</div><div class="g3-card-body">Expandable cards: dynasty badge, architectural style, ASI/UNESCO status, significance, epigraphic records, best photo time.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">⏳</div><div class="g3-card-title">Historical Timeline</div><div class="g3-card-body">AI-generated visual timeline of Chennai's 2,000-year history. Dynasty-coloured nodes, horizontally scrollable, expandable events.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">🍜</div><div class="g3-card-title">Street Food Map</div><div class="g3-card-body">Interactive Leaflet map — 8 iconic Chennai food spots at verified coordinates. Emoji markers, dish info, timing, price.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">🎭</div><div class="g3-card-title">Events Calendar</div><div class="g3-card-body">AI-generated Chennai 2026 events — Margazhi Season, Book Fair, Arubathumoovar. Filterable by type.</div></div>
+      <div class="g3-card"><div class="g3-card-icon">⚡</div><div class="g3-card-title">Performance</div><div class="g3-card-body">24hr localStorage cache. Dynamic Leaflet import. Unsplash CDN. Framer Motion. Three.js 3D landing. Vercel CDN deployment.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SLIDE 6 — FUTURE ════ -->
+<div class="slide" id="s6">
+  <div class="slide-bg"></div>
+  <div class="slide-content">
+    <div class="label-large" style="color:var(--green)">05 · Future Scope</div>
+    <h2 class="headline">What comes <span class="accent-g">next</span></h2>
+    <div class="divider" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
+    <p class="body-large" style="margin-bottom:16px">FastAPI + PostgreSQL backend already scaffolded. v6.0 migrates AI server-side and expands to all 38 districts.</p>
+    <div class="fut-row">
+      <div class="fut-item"><div class="fut-dot" style="background:var(--blue2)"></div><div><div class="fut-title">FastAPI Backend Migration</div><div class="fut-desc">Move AI calls to server proxy — eliminate client-side key exposure. PostgreSQL for user profiles and saved itineraries. Docker containerised.</div></div></div>
+      <div class="fut-item"><div class="fut-dot" style="background:var(--purple)"></div><div><div class="fut-title">Full Tamil Interface</div><div class="fut-desc">Sarvam AI translates entire UI — navigation, labels, interactive elements — into Tamil for complete native language access.</div></div></div>
+      <div class="fut-item"><div class="fut-dot" style="background:var(--yellow)"></div><div><div class="fut-title">Voice Search in Tamil</div><div class="fut-desc">Sarvam STT integration. Speak queries in Tamil, receive heritage intelligence back as Tamil audio through the TTS pipeline.</div></div></div>
+      <div class="fut-item"><div class="fut-dot" style="background:var(--green)"></div><div><div class="fut-title">Expand All 38 Districts</div><div class="fut-desc">Roll out Chennai deep data schema — 30 places, cultural insights, timeline, media layer — to all remaining 37 districts.</div></div></div>
+      <div class="fut-item"><div class="fut-dot" style="background:var(--teal)"></div><div><div class="fut-title">PWA + Offline Mode</div><div class="fut-desc">Workbox service worker. Cached AI responses + local map tiles enable full heritage exploration without internet.</div></div></div>
+      <div class="fut-item"><div class="fut-dot" style="background:var(--red)"></div><div><div class="fut-title">AR Heritage Overlay</div><div class="fut-desc">WebXR + Three.js overlay historical reconstructions on live camera feed when visiting heritage sites across Tamil Nadu.</div></div></div>
+    </div>
+    <div class="tech-row">
+      <div class="tech-pill tc">React 19</div><div class="tech-pill tc">Vite 7</div>
+      <div class="tech-pill tc">Framer Motion</div><div class="tech-pill tc">Tailwind CSS</div>
+      <div class="tech-pill tb">Sarvam AI</div><div class="tech-pill tb">Gemini 2.0</div>
+      <div class="tech-pill tg">Ola Maps</div><div class="tech-pill tg">Leaflet OSM</div>
+      <div class="tech-pill">Three.js / R3F</div><div class="tech-pill">FastAPI (scaffolded)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ NAV ════ -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Previous</button>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="nav-counter" id="counter">1 of 6</div>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+<script>
+/* ── THREE.JS 3D BACKGROUND ── */
+(function(){
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 5;
+
+  /* Particles */
+  const geo = new THREE.BufferGeometry();
+  const count = 1200;
+  const pos = new Float32Array(count * 3);
+  const col = new Float32Array(count * 3);
+  const colors = [
+    [0.26,0.52,1.0],  // blue
+    [0.02,0.71,0.83], // teal
+    [0.2,0.66,0.33],  // green
+    [0.98,0.74,0.02], // yellow
+    [0.92,0.26,0.21], // red
+  ];
+  for(let i=0;i<count;i++){
+    pos[i*3]   = (Math.random()-0.5)*20;
+    pos[i*3+1] = (Math.random()-0.5)*20;
+    pos[i*3+2] = (Math.random()-0.5)*12;
+    const c = colors[Math.floor(Math.random()*colors.length)];
+    col[i*3]=c[0]; col[i*3+1]=c[1]; col[i*3+2]=c[2];
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col,3));
+
+  const mat = new THREE.PointsMaterial({
+    size:0.035, vertexColors:true,
+    transparent:true, opacity:0.7,
+    sizeAttenuation:true
+  });
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  /* Floating geometric shapes */
+  const shapes = [];
+  const shapeGeos = [
+    new THREE.IcosahedronGeometry(0.4, 0),
+    new THREE.OctahedronGeometry(0.35, 0),
+    new THREE.TetrahedronGeometry(0.45, 0),
+    new THREE.IcosahedronGeometry(0.3, 0),
+    new THREE.OctahedronGeometry(0.4, 0),
+  ];
+  const shapeCols = [0x4285F4, 0x34A853, 0xFBBC04, 0x9334E6, 0x06B6D4];
+  shapeGeos.forEach((g, i) => {
+    const m = new THREE.MeshPhongMaterial({
+      color: shapeCols[i],
+      transparent: true,
+      opacity: 0.12,
+      wireframe: true,
+    });
+    const mesh = new THREE.Mesh(g, m);
+    mesh.position.set(
+      (Math.random()-0.5)*10,
+      (Math.random()-0.5)*8,
+      (Math.random()-0.5)*4 - 2
+    );
+    mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+    shapes.push(mesh);
+    scene.add(mesh);
+  });
+
+  /* Lights */
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const pLight = new THREE.PointLight(0x4285F4, 2, 20);
+  pLight.position.set(3, 3, 3);
+  scene.add(pLight);
+  const pLight2 = new THREE.PointLight(0x06B6D4, 1.5, 20);
+  pLight2.position.set(-3, -3, 2);
+  scene.add(pLight2);
+
+  /* Mouse parallax */
+  let mx=0, my=0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX/window.innerWidth - 0.5) * 0.3;
+    my = (e.clientY/window.innerHeight - 0.5) * 0.3;
+  });
+
+  /* Animate */
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.004;
+    particles.rotation.y = t * 0.05;
+    particles.rotation.x = t * 0.02;
+    shapes.forEach((s, i) => {
+      s.rotation.x += 0.003 + i*0.001;
+      s.rotation.y += 0.004 + i*0.0008;
+      s.position.y += Math.sin(t + i) * 0.001;
+    });
+    camera.position.x += (mx - camera.position.x) * 0.05;
+    camera.position.y += (-my - camera.position.y) * 0.05;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ── SLIDE NAVIGATION ── */
+const TOTAL = 6;
+let cur = 1;
+const dotsEl = document.getElementById('navDots');
+for(let i=1;i<=TOTAL;i++){
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===1?' active':'');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+}
+function goTo(n){
+  document.getElementById('s'+cur).classList.remove('active');
+  cur = n;
+  document.getElementById('s'+cur).classList.add('active');
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i+1===cur));
+  document.getElementById('counter').textContent = cur+' of '+TOTAL;
+  document.getElementById('prevBtn').disabled = cur===1;
+  document.getElementById('nextBtn').disabled = cur===TOTAL;
+  document.getElementById('progress').style.width = (cur/TOTAL*100)+'%';
+  window.scrollTo(0,0);
+}
+function navigate(dir){ if(cur+dir>=1&&cur+dir<=TOTAL) goTo(cur+dir); }
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') navigate(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') navigate(-1);
+});
+document.getElementById('progress').style.width = (1/TOTAL*100)+'%';
+</script>
+</body>
+</html>

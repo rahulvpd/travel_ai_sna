@@ -15,6 +15,25 @@ const typeConfig = {
     default: { color: '#D4AF37', icon: '📍', label: 'Place' },
 };
 
+const getRasterFallbackStyle = () => ({
+    version: 8,
+    sources: {
+        'carto-dark': {
+            type: 'raster',
+            tiles: ['https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', 'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', 'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'],
+            tileSize: 256,
+            attribution: '© OpenStreetMap contributors © CARTO'
+        }
+    },
+    layers: [
+        {
+            id: 'carto-dark-layer',
+            type: 'raster',
+            source: 'carto-dark'
+        }
+    ]
+});
+
 const MapComponent = ({ center, markers = [], showRoutes = false }) => {
     const mapContainer = useRef(null);
     const map = useRef(null);
@@ -22,25 +41,30 @@ const MapComponent = ({ center, markers = [], showRoutes = false }) => {
     const [mapLoaded, setMapLoaded] = useState(false);
 
     useEffect(() => {
-        if (!OLA_MAPS_API_KEY) {
-            console.error("Ola Maps API key is missing.");
-            setTimeout(() => setMapError(true), 0);
-            return;
-        }
         if (!mapContainer.current) return;
+
+        const resetTimer = setTimeout(() => {
+            setMapError(false);
+            setMapLoaded(false);
+        }, 0);
 
         const lng = center?.lng || DEFAULT_CENTER.lng;
         const lat = center?.lat || DEFAULT_CENTER.lat;
+        let didFallback = !OLA_MAPS_API_KEY;
 
         try {
+            const styleUrl = OLA_MAPS_API_KEY 
+                ? `https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json?api_key=${OLA_MAPS_API_KEY}`
+                : getRasterFallbackStyle();
+
             map.current = new maplibregl.Map({
                 container: mapContainer.current,
-                style: `https://api.olamaps.io/tiles/vector/v1/styles/default-light-standard/style.json`,
+                style: styleUrl,
                 center: [lng, lat],
                 zoom: center ? 11 : 7,
                 attributionControl: false,
                 transformRequest: (url) => {
-                    if (url.includes('api.olamaps.io')) {
+                    if (url.includes('api.olamaps.io') && !url.includes('api_key')) {
                         const separator = url.includes('?') ? '&' : '?';
                         return {
                             url: `${url}${separator}api_key=${OLA_MAPS_API_KEY}`
@@ -50,6 +74,18 @@ const MapComponent = ({ center, markers = [], showRoutes = false }) => {
                 }
             });
 
+            // If Ola fails after initialization, try switching to a raster fallback
+            map.current.on('error', (e) => {
+                console.warn('MapLibre error:', e);
+                if (map.current && !didFallback) {
+                    didFallback = true;
+                    map.current.setStyle(getRasterFallbackStyle());
+                    return;
+                }
+
+                setMapError(true);
+            });
+
             // Add Controls
             map.current.addControl(new maplibregl.NavigationControl(), 'top-right');
             map.current.addControl(new maplibregl.FullscreenControl(), 'top-right');
@@ -57,7 +93,7 @@ const MapComponent = ({ center, markers = [], showRoutes = false }) => {
             map.current.addControl(new maplibregl.ScaleControl(), 'bottom-left');
             map.current.addControl(
                 new maplibregl.AttributionControl({
-                    customAttribution: '© Ola Maps'
+                    customAttribution: didFallback ? '© OpenStreetMap © CARTO' : '© Ola Maps'
                 })
             );
 
@@ -159,28 +195,25 @@ const MapComponent = ({ center, markers = [], showRoutes = false }) => {
                 });
             });
 
-            map.current.on('error', (e) => {
-                console.error('MapLibre Error:', e);
-                setMapError(true);
-            });
-
         } catch (error) {
             console.error('Failed to initialize Map:', error);
             setTimeout(() => setMapError(true), 0);
         }
 
         return () => {
+            clearTimeout(resetTimer);
             if (map.current) {
                 map.current.remove();
+                map.current = null;
             }
         };
     }, [center, markers, showRoutes]);
 
-    if (mapError || !OLA_MAPS_API_KEY) {
+    if (mapError) {
         return (
             <div className="h-full w-full rounded-2xl overflow-hidden border-2 border-vibrant-gold/30 shadow-2xl flex flex-col items-center justify-center bg-white/5">
-                <p className="text-white/40 text-sm">Failed to load Ola Maps.</p>
-                {!OLA_MAPS_API_KEY && <p className="text-white/30 text-xs mt-1">API Key missing.</p>}
+                <p className="text-white/40 text-sm">Failed to load the map.</p>
+                <p className="text-white/30 text-xs mt-1">Falling back map provider also failed.</p>
             </div>
         );
     }
@@ -190,7 +223,7 @@ const MapComponent = ({ center, markers = [], showRoutes = false }) => {
             {!mapLoaded && (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
                     <Loader size={24} className="text-vibrant-gold animate-spin mb-2" />
-                    <p className="text-white/60 text-sm">Loading complete Ola Map...</p>
+                    <p className="text-white/60 text-sm">Loading planner map...</p>
                 </div>
             )}
             <div ref={mapContainer} className="w-full h-full" />

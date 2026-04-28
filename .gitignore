@@ -7,3 +7,33 @@ dist
 build-error.txt
 add_safety_scores.js
 .vite
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Python virtual environments
+venv/
+env/
+.venv/
+
+# Database files
+*.db
+*.sqlite3
+
+# Server output files
+*.out
+*.err
+dev_server.out
+dev_server_cli.err
+dev_server_cli.out
+backend/backend_server_cli.err
+backend/backend_server_cli.out
+out.txt
+err.txt
+
+# Compiled / build artifacts
+backend/=1.26.0

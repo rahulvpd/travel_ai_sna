@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/layout/Navbar';
 import ParticleBackground from '../components/ui/ParticleBackground';
+import ChennaiIntelligencePanel from '../components/tripintelligence/ChennaiIntelligencePanel';
+import { CHENNAI_NODES } from '../services/chennaiSNA';
 import { DISTRICTS } from '../data/districts';
 import { itineraryService } from '../services/api';
 
@@ -21,7 +23,8 @@ const TripPlanner = () => {
         duration: 3,
         budget: 'medium',
         travelers: 2,
-        travelStyle: 'couple'
+        travelStyle: 'couple',
+        selectedPlaces: []
     });
     const [isGenerating, setIsGenerating] = useState(false);
 
@@ -35,6 +38,20 @@ const TripPlanner = () => {
             d.bestPlace?.toLowerCase().includes(q)
         ).slice(0, 8);
     }, [searchQuery]);
+
+    const isChennaiDestination = useMemo(() => {
+        return preferences.destination.trim().toLowerCase() === 'chennai';
+    }, [preferences.destination]);
+
+    const chennaiPlaceOptions = useMemo(() => {
+        return CHENNAI_NODES.map(place => ({
+            ...place,
+            district: 'chn',
+            districtId: 'chn',
+            location: 'Chennai',
+            region: 'Chennai'
+        }));
+    }, []);
 
     const moods = [
         { id: 'spiritual', label: 'Spiritual', icon: '🙏', desc: 'Temples & Peace' },
@@ -77,6 +94,19 @@ const TripPlanner = () => {
         });
     };
 
+    const toggleSelectedPlace = (place) => {
+        setPreferences(prev => {
+            const alreadySelected = (prev.selectedPlaces || []).some(selected => selected.name === place.name);
+
+            return {
+                ...prev,
+                selectedPlaces: alreadySelected
+                    ? prev.selectedPlaces.filter(selected => selected.name !== place.name)
+                    : [...(prev.selectedPlaces || []), place]
+            };
+        });
+    };
+
     const nextStep = () => setStep(prev => prev + 1);
     const prevStep = () => setStep(prev => prev - 1);
 
@@ -86,14 +116,14 @@ const TripPlanner = () => {
             const response = await itineraryService.generatePlan({
                 destination: preferences.destination,
                 days: preferences.duration,
-                interests: preferences.interests,
+                interests: [...preferences.interests, ...preferences.moods],
                 budget: preferences.budget,
                 travel_style: preferences.travelStyle
             });
             
             setIsGenerating(false);
             const itineraryData = response.data;
-            navigate('/planner', {
+            navigate('/itinerary', {
                 state: {
                     itinerary: itineraryData,
                     preferences: preferences
@@ -104,7 +134,7 @@ const TripPlanner = () => {
             // Fallback for demo if backend is not running
             setTimeout(() => {
                 setIsGenerating(false);
-                navigate('/planner', {
+                navigate('/itinerary', {
                     state: {
                         preferences: {
                             ...preferences,
@@ -188,7 +218,7 @@ const TripPlanner = () => {
                                             value={searchQuery || preferences.destination}
                                             onChange={(e) => {
                                                 setSearchQuery(e.target.value);
-                                                if (!e.target.value) setPreferences({ ...preferences, destination: '' });
+                                                if (!e.target.value) setPreferences({ ...preferences, destination: '', selectedPlaces: [] });
                                             }}
                                             autoFocus
                                         />
@@ -208,7 +238,11 @@ const TripPlanner = () => {
                                                 <button
                                                     key={d.id}
                                                     onClick={() => {
-                                                        setPreferences({ ...preferences, destination: d.name });
+                                                        setPreferences({
+                                                            ...preferences,
+                                                            destination: d.name,
+                                                            selectedPlaces: d.id === 'chn' ? preferences.selectedPlaces : []
+                                                        });
                                                         setSearchQuery('');
                                                     }}
                                                     className="w-full flex items-center gap-4 p-4 hover:bg-white/10 transition-colors text-left border-b border-white/5 last:border-0"
@@ -229,6 +263,60 @@ const TripPlanner = () => {
                                         </motion.div>
                                     )}
                                 </div>
+
+                                {isChennaiDestination && (
+                                    <div className="max-w-3xl mx-auto pt-4">
+                                        <div className="rounded-3xl border border-vibrant-gold/15 bg-vibrant-gold/5 p-5 md:p-6">
+                                            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
+                                                <div>
+                                                    <p className="text-xs uppercase tracking-[0.25em] text-vibrant-gold font-semibold mb-1">
+                                                        Chennai Heritage Intelligence
+                                                    </p>
+                                                    <h3 className="text-xl font-heading text-white">Select Chennai places for live trip analysis</h3>
+                                                    <p className="text-sm text-white/45 mt-1">
+                                                        Pick at least 2 places to unlock the new Chennai intelligence panel below.
+                                                    </p>
+                                                </div>
+                                                <div className="text-left md:text-right">
+                                                    <p className="text-2xl font-heading text-vibrant-gold">{preferences.selectedPlaces.length}</p>
+                                                    <p className="text-xs text-white/40">selected places</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+                                                {chennaiPlaceOptions.map(place => {
+                                                    const isSelected = preferences.selectedPlaces.some(selected => selected.name === place.name);
+
+                                                    return (
+                                                        <button
+                                                            key={place.id}
+                                                            type="button"
+                                                            onClick={() => toggleSelectedPlace(place)}
+                                                            className={`rounded-2xl border p-4 text-left transition-all duration-300 ${isSelected
+                                                                ? 'border-vibrant-gold bg-vibrant-gold/10 shadow-[0_0_20px_rgba(255,204,0,0.12)]'
+                                                                : 'border-white/10 bg-black/20 hover:border-white/25 hover:bg-white/5'
+                                                            }`}
+                                                        >
+                                                            <div className="flex items-start justify-between gap-3">
+                                                                <div>
+                                                                    <p className="text-sm font-semibold text-white">{place.name}</p>
+                                                                    <p className="text-xs text-white/40 mt-1">{place.period} · {place.placeType}</p>
+                                                                </div>
+                                                                {isSelected && <Check size={16} className="text-vibrant-gold flex-shrink-0" />}
+                                                            </div>
+                                                            <div className="mt-3 flex items-center gap-2 flex-wrap">
+                                                                <span className="text-[11px] px-2 py-0.5 rounded-full border border-white/10 bg-white/5 text-white/60">
+                                                                    {place.dynasty}
+                                                                </span>
+                                                                <span className="text-[11px] text-white/35">Chennai</span>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
 
                                 <div className="text-center pt-4">
                                     <button
@@ -502,6 +590,8 @@ const TripPlanner = () => {
                         )}
                     </AnimatePresence>
                 </div>
+
+                <ChennaiIntelligencePanel selectedPlaces={preferences.selectedPlaces || []} />
             </div>
         </div>
     );

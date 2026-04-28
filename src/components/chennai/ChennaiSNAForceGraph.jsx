@@ -7,10 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { dynastyHex } from '../../utils/dynastyColors';
 import { EDGE_CONFIG } from '../../services/chennaiSNA';
 
-export default function ChennaiSNAForceGraph({ snaData }) {
+export default function ChennaiSNAForceGraph({ snaData, data }) {
   const svgRef = useRef(null);
   const contRef = useRef(null);
   const simRef = useRef(null);
+  const graphData = snaData || data;
 
   const [selected, setSelected] = useState(null);
   const [tooltip, setTooltip] = useState(null);
@@ -33,11 +34,11 @@ export default function ChennaiSNAForceGraph({ snaData }) {
 
   // D3 render
   useEffect(() => {
-    if (!snaData || !svgRef.current) return;
+    if (!graphData || !svgRef.current) return;
     setReady(false);
 
     import('https://cdn.jsdelivr.net/npm/d3@7/+esm').then(d3 => {
-      renderGraph(d3, snaData, dims);
+      renderGraph(d3, graphData, dims);
       setReady(true);
     });
 
@@ -45,7 +46,7 @@ export default function ChennaiSNAForceGraph({ snaData }) {
       if (simRef.current) simRef.current.stop();
       if (svgRef.current) svgRef.current.innerHTML = '';
     };
-  }, [snaData, dims]);
+  }, [graphData, dims]);
 
   function renderGraph(d3, data, { w, h }) {
     const svg = d3.select(svgRef.current);
@@ -173,7 +174,7 @@ export default function ChennaiSNAForceGraph({ snaData }) {
     // Interactions
     node
       .on('mouseover', (e, d) => {
-        setTooltip({ x: e.clientX, y: e.clientY, node: d, metrics: snaData.metrics[d.id] });
+        setTooltip({ x: e.clientX, y: e.clientY, node: d, metrics: graphData.metrics[d.id] });
         link.attr('stroke-opacity', l => {
           const isConnected = l.source.id === d.id || l.target.id === d.id;
           const keys = Object.keys(EDGE_CONFIG);
@@ -181,7 +182,7 @@ export default function ChennaiSNAForceGraph({ snaData }) {
           return isConnected ? (base[keys.indexOf(l.primaryType)] || 0.35) * 2 : 0.04;
         });
         node.style('opacity', n =>
-          n.id === d.id || snaData.metrics[d.id]?.neighbours?.includes(n.id) ? 1 : 0.1
+          n.id === d.id || graphData.metrics[d.id]?.neighbours?.includes(n.id) ? 1 : 0.1
         );
       })
       .on('mousemove', e => setTooltip(p => p ? { ...p, x: e.clientX, y: e.clientY } : null))
@@ -196,10 +197,10 @@ export default function ChennaiSNAForceGraph({ snaData }) {
         e.stopPropagation();
         setSelected(prev => prev?.id === d.id ? null : {
           ...d,
-          metrics: snaData.metrics[d.id],
-          connectedNames: (snaData.metrics[d.id]?.neighbours || [])
-            .map(nId => snaData.nodes.find(n => n.id === nId)?.name)
-            .filter(Boolean),
+            metrics: graphData.metrics[d.id],
+            connectedNames: (graphData.metrics[d.id]?.neighbours || [])
+              .map(nId => graphData.nodes.find(n => n.id === nId)?.name)
+              .filter(Boolean),
         });
       });
 
@@ -268,7 +269,7 @@ export default function ChennaiSNAForceGraph({ snaData }) {
     });
   }, []);
 
-  const dynasties = snaData ? [...new Set(snaData.nodes.map(n => n.dynasty))] : [];
+  const dynasties = graphData ? [...new Set(graphData.nodes.map(n => n.dynasty))] : [];
 
   return (
     <div className="space-y-4">

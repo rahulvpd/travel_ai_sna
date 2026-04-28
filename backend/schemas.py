@@ -23,6 +23,11 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
 
+class UserLoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: dict
+
 class AttractionBase(BaseModel):
     name: str
     latitude: float

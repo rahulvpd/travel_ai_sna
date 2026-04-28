@@ -1,8 +1,11 @@
 import httpx
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 WEATHER_API_KEY = os.getenv("VITE_WEATHER_API_KEY")
 BASE_URL = "https://api.openweathermap.org/data/2.5/forecast"
@@ -38,6 +41,6 @@ async def get_forecast(lat: float, lon: float) -> dict:
                     "condition": first_forecast["weather"][0]["main"]
                 }
     except Exception as e:
-        print(f"Weather API error: {e}")
-        
+        logger.error(f"Weather API error: {e}")
+
     return {"summary": "Weather info unavailable.", "temp": None, "condition": "Unknown"}
