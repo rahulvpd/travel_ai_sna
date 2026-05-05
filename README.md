@@ -54,5 +54,3 @@ A full-stack AI-powered tourism platform for Tamil Nadu, built with React 19, Vi
 - **Backend:** FastAPI, SQLAlchemy, SQLite (default), Pydantic.
 - **Data:** Overpass API (OSM), Groq LLM (Llama 3.3).
 
----
-*Created by Gemini CLI*
