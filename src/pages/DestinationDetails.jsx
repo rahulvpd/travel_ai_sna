@@ -29,6 +29,7 @@ import ChennaiSNAGraph from '../components/chennai/ChennaiSNAGraph';
 import ChennaiSNAForceGraph from '../components/chennai/ChennaiSNAForceGraph';
 import ChennaiSNADashboard from '../components/chennai/ChennaiSNADashboard';
 import ChennaiSNAInsights from '../components/chennai/ChennaiSNAInsights';
+import ChennaiSNAMegaSection from '../components/chennai/ChennaiSNAMegaSection';
 import ChennaiSNASection from '../components/chennai/ChennaiSNASection';
 import ChennaiSNAEnhancedSection from '../components/chennai/ChennaiSNAEnhancedSection';
 import ChennaiSNAPhase2Section from '../components/chennai/ChennaiSNAPhase2Section';
@@ -54,7 +55,7 @@ const DestinationDetails = () => {
   // CHENNAI SNA STATE
   const [snaData, setSnaData] = useState(null);
   const [activeSnaTab, setActiveSnaTab] = useState('map'); // map, graph, metrics, insights
-  const [useEnhancedSNA, setUseEnhancedSNA] = useState(true); // toggle between basic and enhanced
+  const [snaMode, setSnaMode] = useState('mega'); // basic, enhanced, mega
 
     // Translation State for Chennai Insights
     const [tamilMode, setTamilMode] = useState(false);
@@ -222,6 +223,25 @@ const DestinationDetails = () => {
 
     // Try to find from districts data by string ID, fallback to numeric ID
     const districtMatch = DISTRICTS.find(d => d.id === id);
+
+    // Backend enrichment: merge DB attractions into static district data
+    const [backendAttractions, setBackendAttractions] = useState(null);
+    useEffect(() => {
+        if (!districtMatch?.name) return;
+        const fetchBackendData = async () => {
+            try {
+                const { placeService } = await import('../services/api');
+                const res = await placeService.getPlaces(districtMatch.name);
+                if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+                    setBackendAttractions(res.data);
+                }
+            } catch (err) {
+                console.debug('Backend places API unavailable, using static districts.js');
+            }
+        };
+        fetchBackendData();
+    }, [districtMatch?.name]);
+
     const destination = districtMatch
         ? { ...destinationsData[1], name: districtMatch.name, tagline: districtMatch.tagline, description: districtMatch.description, image: districtMatch.image, rating: districtMatch.safetyScore, reviews: Math.floor(Math.random() * 2000 + 500), price: Math.floor(Math.random() * 3000 + 2000), images: [districtMatch.image] }
         : (destinationsData[id] || destinationsData[1]);
@@ -1221,15 +1241,15 @@ const DestinationDetails = () => {
     <div className="max-w-7xl mx-auto px-4 lg:px-8 pb-16 space-y-8">
 
       {/* ── SNA HERITAGE NETWORK — FIRST SECTION ── */}
-      {/* Toggle between Basic and Enhanced SNA */}
+      {/* Toggle between Basic, Enhanced, and Mega SNA */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <span className="text-xs text-white/40 uppercase tracking-widest">SNA Mode:</span>
           <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
             <button
-              onClick={() => setUseEnhancedSNA(false)}
+              onClick={() => setSnaMode('basic')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                !useEnhancedSNA
+                snaMode === 'basic'
                   ? 'bg-white/10 text-white'
                   : 'text-white/50 hover:text-white'
               }`}
@@ -1237,70 +1257,54 @@ const DestinationDetails = () => {
               📊 Basic
             </button>
             <button
-              onClick={() => setUseEnhancedSNA(true)}
+              onClick={() => setSnaMode('enhanced')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                useEnhancedSNA
+                snaMode === 'enhanced'
                   ? 'bg-vibrant-gold text-black'
                   : 'text-white/50 hover:text-white'
               }`}
             >
               ✨ Enhanced
             </button>
+            <button
+              onClick={() => setSnaMode('mega')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                snaMode === 'mega'
+                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                  : 'text-white/50 hover:text-white'
+              }`}
+            >
+              🌍 Mega-City
+            </button>
           </div>
         </div>
-        {useEnhancedSNA && (
+        {snaMode === 'enhanced' && (
           <span className="text-xs bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30">
             🆕 Tourism Metrics + Circuits
+          </span>
+        )}
+        {snaMode === 'mega' && (
+          <span className="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">
+            🏙️ 100+ Urban Nodes Loaded
           </span>
         )}
       </div>
 
       {/* Conditional SNA Section Rendering */}
-      {useEnhancedSNA ? (
+      {snaMode === 'mega' ? (
+        <ChennaiSNAMegaSection />
+      ) : snaMode === 'enhanced' ? (
         <ChennaiSNAEnhancedSection />
       ) : (
         <ChennaiSNASection />
       )}
 
       {/* Phase 2 Section - Advanced Visualizations */}
-      {useEnhancedSNA && (
+      {snaMode === 'enhanced' && (
         <ChennaiSNAPhase2Section />
       )}
 
-{/* SECTION: SNA Heritage Network (v6.0) */}
-                        <div className="bg-black/40 border border-white/10 rounded-2xl p-6 backdrop-blur-xl">
-                            <div className="flex items-center justify-between mb-6">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-white font-syne mb-1">Chennai Heritage Network</h2>
-                                    <p className="text-white/50 text-sm">Explore the hidden connections of the Pallava & Chola eras</p>
-                                </div>
-                                <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
-                                    {['map', 'graph', 'metrics', 'insights'].map(tab => (
-                                        <button
-                                            key={tab}
-                                            onClick={() => setActiveSnaTab(tab)}
-                                            className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-all ${
-                                                activeSnaTab === tab 
-                                                ? 'bg-vibrant-gold text-black shadow-lg' 
-                                                : 'text-white/50 hover:text-white'
-                                            }`}
-                                        >
-                                            {tab === 'map' && '🗺️ Map'}
-                                            {tab === 'graph' && '🕸️ Graph'}
-                                            {tab === 'metrics' && '📊 Metrics'}
-                                            {tab === 'insights' && '🤖 Insights'}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            
-                            <div className="min-h-[500px]">
-                                {activeSnaTab === 'map' && <ChennaiSNAGraph data={snaData} />}
-                                {activeSnaTab === 'graph' && <ChennaiSNAForceGraph data={snaData} />}
-                                {activeSnaTab === 'metrics' && <ChennaiSNADashboard data={snaData} />}
-                                {activeSnaTab === 'insights' && <ChennaiSNAInsights insights={snaData?.aiInsights} />}
-                            </div>
-                        </div>
+
 
                         {/* SECTION A: Dynasty & Type Filter */}
                         <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-6">

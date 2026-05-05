@@ -1,6 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiService } from './api';
 
-const ENV_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+// NOTE: Gemini API key is now secured on the backend.
+// The frontend no longer needs VITE_GEMINI_API_KEY for place details.
 
 // Cache results in localStorage
 const getCachedData = (key) => {
@@ -42,96 +43,24 @@ NARRATIVE TONE: "Tamil Nadu is a living civilisation" — frame descriptions aro
 `;
 
 export const fetchPlaceDetails = async (placeName, userApiKey) => {
-  const apiKey = userApiKey || ENV_API_KEY;
   // BUST CACHE: Using v2 key so old non-civilisational data is wiped
   const cacheKey = `v3_${placeName.toLowerCase().replace(/\s+/g, '_')}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
 
-  if (!apiKey) return getDefaultPlaceData(placeName);
-
+  // 1. Try backend AI proxy first (API key stays server-side)
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    const prompt = `${TN_CIVILISATION_CONTEXT}
-
-You are a Tamil Nadu tourism expert and cultural historian. Provide REAL, ACCURATE data for "${placeName}" in Tamil Nadu, India. 
-Do not treat this as a standard tourist checklist. Frame your descriptions highlighting its role in Tamil Nadu's living civilisation.
-
-**RULES**: Only include REAL places that exist on Google Maps. No fabrication. Use the official district NIC URL data.
-
-Return ONLY valid JSON:
-{
-  "name": "${placeName}",
-  "civilisationalTagline": "A powerful 4-7 word tagline reflecting its living heritage",
-  "description": "2-3 sentence rich description framing the place as part of Tamil Nadu's 2500-year living civilisation.",
-  "highlights": ["Top cultural/historical attraction 1", "Top attraction 2", "Experience 3"],
-  "bestTimeToVisit": "Month - Month",
-  "averageTemp": "25°C",
-  "nearestAirport": "Airport name (distance km)",
-  "hotels": [
-    {
-      "name": "Real Hotel/Heritage Stay Name",
-      "rating": 4.5,
-      "priceRange": "₹2000-5000/night",
-      "type": "Budget|Mid-Range|Heritage Luxury",
-      "amenities": ["WiFi", "Pool"],
-      "location": { "lat": 0.0, "lng": 0.0 }
+    const response = await aiService.getPlaceDetails(placeName);
+    if (response.data && response.data.name && !response.data.error) {
+      setCachedData(cacheKey, response.data);
+      return response.data;
     }
-  ],
-  "restaurants": [
-    {
-      "name": "Real Restaurant Name",
-      "cuisine": "Authentic Local Cuisine",
-      "rating": 4.3,
-      "mustTry": "Signature traditional dish",
-      "priceRange": "₹150-400/person",
-      "location": { "lat": 0.0, "lng": 0.0 }
-    }
-  ],
-  "attractions": [
-    {
-      "name": "Real Place Name",
-      "type": "Temple|Monument|Nature|Craft Village|Market",
-      "rating": 4.6,
-      "entryFee": "Free or ₹amount",
-      "timings": "6 AM - 8 PM",
-      "description": "One-line civilisational/historical context",
-      "location": { "lat": 0.0, "lng": 0.0 }
-    }
-  ],
-  "mustTryFood": ["Traditional Dish 1", "Dish 2", "Dish 3"],
-  "safetyTips": ["Tip 1", "Tip 2"],
-  "travelTip": "One practical travel tip",
-  "craftEconomy": "What local craft/manufacturing tradition is alive here?",
-  "festivals": [
-    {
-      "name": "Local Festival Name",
-      "description": "Deep civilisational significance of this festival",
-      "month": "Month of celebration"
-    }
-  ],
-  "culturalInsights": [
-    "Fascinating cultural fact 1",
-    "Living tradition fact 2"
-  ]
-}
-
-Return ONLY the JSON.`;
-
-    const result = await model.generateContent(prompt);
-    let text = result.response.text();
-    text = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) text = jsonMatch[0];
-    const data = JSON.parse(text);
-    setCachedData(cacheKey, data);
-    return data;
-  } catch (error) {
-    console.error("PlaceDataService Error:", error);
-    return getDefaultPlaceData(placeName);
+  } catch (backendError) {
+    console.warn('Backend AI proxy unavailable, using local seed data:', backendError.message);
   }
+
+  // 2. Fall back to local seed data
+  return getDefaultPlaceData(placeName);
 };
 
 // ─── SEEDED DATA from Official Government Sources ───

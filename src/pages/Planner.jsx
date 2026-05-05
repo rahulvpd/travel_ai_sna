@@ -419,18 +419,7 @@ const Planner = () => {
                                     </div>
                                 )}
 
-                                {!import.meta.env.VITE_GEMINI_API_KEY && (
-                                    <div className="space-y-2 pt-4 border-t border-white/10">
-                                        <label className="text-xs font-bold uppercase tracking-wider text-vibrant-pink">Enter Gemini API Key</label>
-                                        <input
-                                            type="password"
-                                            placeholder="Paste your key from Google AI Studio here"
-                                            className="w-full bg-black/40 border border-white/20 rounded-lg p-3 text-white placeholder:text-white/20 focus:border-vibrant-gold outline-none"
-                                            value={apiKeyInput}
-                                            onChange={(e) => setApiKeyInput(e.target.value)}
-                                        />
-                                    </div>
-                                )}
+
 
                                 <div className="pt-4">
                                     <Button

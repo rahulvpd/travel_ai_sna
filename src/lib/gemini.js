@@ -1,32 +1,24 @@
-// Gemini API utility for making requests
-// You need to set your Gemini API key in an environment variable or config file
+// Gemini API utility — completely proxied through the backend for security
+// API key is stored server-side, not in the browser.
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+import { aiService } from '../services/api';
 
 export async function generateGeminiContent(messages) {
-  if (!GEMINI_API_KEY) {
-    throw new Error('Gemini API key not set. Please add VITE_GEMINI_API_KEY to your .env file.');
+  // All AI generation now flows through the secure backend proxy
+  try {
+    const response = await aiService.geminiGenerate(messages);
+    if (response.data && response.data.text) {
+      return {
+        candidates: [{
+          content: {
+            parts: [{ text: response.data.text }]
+          }
+        }]
+      };
+    }
+    throw new Error('Invalid response from AI backend');
+  } catch (backendError) {
+    console.error('AI Service Error:', backendError.message);
+    throw new Error('AI service is currently unavailable. Please try again later.');
   }
-
-  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: messages.map((msg) => ({ text: msg }))
-        }
-      ]
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch from Gemini API');
-  }
-
-  const data = await response.json();
-  return data;
 }

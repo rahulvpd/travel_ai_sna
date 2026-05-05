@@ -6,7 +6,7 @@ import Navbar from '../components/layout/Navbar';
 import ParticleBackground from '../components/ui/ParticleBackground';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
 import { CULTURAL_CIRCUITS, STRATEGIC_PILLARS, TN_CIVILISATION_FACTS } from '../data/culturalCircuits';
-import HeritageGraphView from '../components/chennai/HeritageGraphView';
+import CircuitsSNASection from '../components/circuits/CircuitsSNASection';
 
 const CulturalCircuits = () => {
     const [activeCircuit, setActiveCircuit] = useState(null);
@@ -105,11 +105,8 @@ const CulturalCircuits = () => {
                     </div>
 
                     {/* Integrated Heritage SNA Graph View */}
-                    <div className="mt-12 p-6 bg-black/40 border border-white/10 rounded-3xl">
-                        <h3 className="text-white font-heading text-2xl mb-4">Heritage Network Analysis</h3>
-                        <div className="h-[400px] w-full bg-black/60 rounded-xl overflow-hidden">
-                            <HeritageGraphView />
-                        </div>
+                    <div className="mt-12">
+                        <CircuitsSNASection />
                     </div>
                 </motion.div>
 

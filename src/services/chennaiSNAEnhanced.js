@@ -768,9 +768,9 @@ function calculateCulturalConnection(a, b) {
 // ─────────────────────────────────────────────────────────────
 // ADVANCED SNA METRICS
 // ─────────────────────────────────────────────────────────────
-function computeEnhancedMetrics(nodes, edges) {
+function computeEnhancedMetrics(nodes, edges, centralityFromNeo4j = null) {
   const m = {};
-  
+
   nodes.forEach(n => {
     m[n.id] = {
       id: n.id,
@@ -786,7 +786,6 @@ function computeEnhancedMetrics(nodes, edges) {
       eigenvector: 0,
       neighbours: [],
       edgeIds: [],
-      // NEW: Tourism-specific metrics
       tourismCentrality: 0,
       experienceDiversity: 0,
       accessibilityIndex: 0,
@@ -806,13 +805,11 @@ function computeEnhancedMetrics(nodes, edges) {
     m[e.target].edgeIds.push(e.id);
   });
 
-  // Degree centrality (normalized)
   const maxDeg = Math.max(...Object.values(m).map(x => x.degree));
   Object.values(m).forEach(x => {
     x.degreeCentrality = maxDeg > 0 ? x.degree / maxDeg : 0;
   });
 
-  // BFS for shortest paths
   function bfs(start, end) {
     const visited = new Set([start]);
     const queue = [[start]];
@@ -830,7 +827,6 @@ function computeEnhancedMetrics(nodes, edges) {
     return null;
   }
 
-  // Betweenness centrality
   nodes.forEach(s => {
     nodes.forEach(t => {
       if (s.id === t.id) return;
@@ -846,7 +842,6 @@ function computeEnhancedMetrics(nodes, edges) {
     x.betweennessCentrality = maxBtw > 0 ? x.betweenness / maxBtw : 0;
   });
 
-  // Closeness centrality
   nodes.forEach(n => {
     let total = 0, reach = 0;
     nodes.forEach(o => {
@@ -860,7 +855,6 @@ function computeEnhancedMetrics(nodes, edges) {
     m[n.id].closeness = reach > 0 ? reach / total : 0;
   });
 
-  // Eigenvector centrality — power iteration
   let eig = {};
   nodes.forEach(n => { eig[n.id] = 1.0; });
   for (let iter = 0; iter < 20; iter++) {
@@ -873,17 +867,30 @@ function computeEnhancedMetrics(nodes, edges) {
   }
   nodes.forEach(n => { m[n.id].eigenvector = eig[n.id]; });
 
-  // NEW: Tourism-specific metrics
   nodes.forEach(n => {
     const node = n;
     const metrics = m[n.id];
-    
-    // Tourism Centrality: weighted degree + visitor popularity
-    const visitorNorm = node.visitorData ? 
+
+    const visitorNorm = node.visitorData ?
       node.visitorData.dailyAverage / Math.max(...nodes.map(x => x.visitorData?.dailyAverage || 1)) : 0;
+
+    let neo4jDegree = 0;
+    if (centralityFromNeo4j) {
+      const neo4jKey = Object.keys(centralityFromNeo4j).find(k =>
+        k.toLowerCase().includes(n.name.toLowerCase()) ||
+        n.name.toLowerCase().includes(k.toLowerCase())
+      );
+      if (neo4jKey) {
+        neo4jDegree = centralityFromNeo4j[neo4jKey];
+      }
+    }
+
+    const degreeForScore = neo4jDegree > 0 ? neo4jDegree : metrics.degree;
     metrics.tourismCentrality = (metrics.degreeCentrality * 0.4) + (visitorNorm * 0.6);
-    
-    // Experience Diversity: variety of place types in neighborhood
+    if (neo4jDegree > 0) {
+      metrics.tourismCentrality = (neo4jDegree / maxDeg) * 0.5 + visitorNorm * 0.5;
+    }
+
     const neighborTypes = new Set(
       metrics.neighbours
         .map(nbId => nodes.find(x => x.id === nbId)?.placeType)
@@ -892,21 +899,16 @@ function computeEnhancedMetrics(nodes, edges) {
     const typeCount = neighborTypes.size;
     const totalTypes = new Set(nodes.map(x => x.placeType)).size;
     metrics.experienceDiversity = typeCount / totalTypes;
-    
-    // Accessibility Index
+
     metrics.accessibilityIndex = (node.accessibility || 0.5) * metrics.degreeCentrality;
-    
-    // Visitor Popularity (normalized)
+
     metrics.visitorPopularity = visitorNorm;
-    
-    // Recommendation Score (combined)
-    metrics.recommendationScore = (
-      metrics.tourismCentrality * 0.3 +
-      metrics.experienceDiversity * 0.2 +
-      metrics.betweennessCentrality * 0.2 +
-      metrics.closeness * 0.15 +
-      (node.accessibility || 0.5) * 0.15
-    );
+
+    metrics.recommendationScore =
+      (metrics.tourismCentrality * 0.35) +
+      (metrics.experienceDiversity * 0.25) +
+      (metrics.accessibilityIndex * 0.2) +
+      (visitorNorm * 0.2);
   });
 
   return m;
@@ -1289,6 +1291,7 @@ Respond ONLY with valid JSON, no markdown fences:
 
 // ─────────────────────────────────────────────────────────────
 // MAIN EXPORT — computeEnhancedChennaiSNA()
+// Fetches graph data from backend Neo4j, falls back to local JS calculation
 // ─────────────────────────────────────────────────────────────
 export async function computeEnhancedChennaiSNA() {
   // Cache check
@@ -1307,9 +1310,40 @@ export async function computeEnhancedChennaiSNA() {
 
   console.log('[Enhanced SNA] Computing Chennai heritage network...');
 
+  // Try to fetch graph data from backend Neo4j
+  let neo4jData = null;
+  try {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const response = await fetch(`${apiBase}/api/graph`);
+    if (response.ok) {
+      neo4jData = await response.json();
+      console.log('[Enhanced SNA] Fetched graph data from Neo4j backend');
+    }
+  } catch (err) {
+    console.warn('[Enhanced SNA] Neo4j backend unavailable, using local JS calculation:', err.message);
+  }
+
+  let centralityData = [];
+  try {
+    const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const response = await fetch(`${apiBase}/api/graph/centrality`);
+    if (response.ok) {
+      centralityData = await response.json();
+    }
+  } catch {
+    // ignore
+  }
+
+  const centralityDict = {};
+  if (Array.isArray(centralityData)) {
+    centralityData.forEach(c => {
+      centralityDict[c.attraction || c.name] = c.degree;
+    });
+  }
+
   const nodes = CHENNAI_ENHANCED_NODES;
   const edges = buildEnhancedEdges(nodes);
-  const metrics = computeEnhancedMetrics(nodes, edges);
+  const metrics = computeEnhancedMetrics(nodes, edges, centralityDict);
   const communities = detectEnhancedCommunities(nodes, metrics);
   const circuits = generateTourismCircuits(nodes, edges, communities);
   const topEdges = [...edges].sort((a, b) => b.weight - a.weight).slice(0, 15);
@@ -1330,7 +1364,8 @@ export async function computeEnhancedChennaiSNA() {
     topBridgeNode: rankedByBetweenness[0]?.name,
     topTourismHub: rankedByTourismCentrality[0]?.name,
     topRecommendation: rankedByRecommendation[0]?.name,
-    totalCircuits: circuits.length
+    totalCircuits: circuits.length,
+    neo4jConnected: !!neo4jData
   };
 
   // AI tourism insights
@@ -1355,6 +1390,7 @@ export async function computeEnhancedChennaiSNA() {
     rankedByRecommendation,
     networkStats,
     tourismInsights,
+    neo4jData,
     computedAt: Date.now()
   };
 

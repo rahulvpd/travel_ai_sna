@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { MapPin, Star, Shield, Users, ArrowRight, Camera, Sun, Umbrella } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ParticleBackground from '../components/ui/ParticleBackground';
+import CustomCursor from '../components/ui/CustomCursor';
 
 const Destinations = () => {
     const [activeTab, setActiveTab] = useState('heritage');
+    const { scrollY } = useScroll();
+
+    // Parallax effects
+    const yHero = useTransform(scrollY, [0, 500], [0, 200]);
+    const opacityHero = useTransform(scrollY, [0, 400], [1, 0]);
+    const yText = useTransform(scrollY, [0, 500], [0, -50]);
 
     const categories = [
         { id: 'heritage', label: 'Heritage & Spiritual', icon: '🏛️', desc: 'Timeless temples and ancient architecture.' },
@@ -13,10 +21,10 @@ const Destinations = () => {
     ];
 
     const destinationsData = {
-heritage: [
-    {
-      id: 1,
-      name: 'Madurai',
+        heritage: [
+            {
+                id: 1,
+                name: 'Madurai',
                 title: 'The City of Temples',
                 image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.8,
@@ -30,7 +38,7 @@ heritage: [
                 id: 2,
                 name: 'Thanjavur',
                 title: 'Rice Bowl of Tamil Nadu',
-                image: 'https://images.unsplash.com/photo-1627894006066-b4528dc9052b?q=80&w=2670&auto=format&fit=crop', // Big Temple
+                image: 'https://images.unsplash.com/photo-1627894006066-b4528dc9052b?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.9,
                 safety: 96,
                 crowd: 'Moderate',
@@ -56,7 +64,7 @@ heritage: [
                 id: 4,
                 name: 'Ooty',
                 title: 'Queen of Hill Stations',
-                image: 'https://images.unsplash.com/photo-1548685122-f6b97645f629?q=80&w=2670&auto=format&fit=crop', // Tea gardens
+                image: 'https://images.unsplash.com/photo-1548685122-f6b97645f629?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.6,
                 safety: 94,
                 crowd: 'High',
@@ -68,7 +76,7 @@ heritage: [
                 id: 5,
                 name: 'Kodaikanal',
                 title: 'Princess of Hill Stations',
-                image: 'https://images.unsplash.com/photo-1596707328599-28c0c1969a59?q=80&w=2670&auto=format&fit=crop', // Kodai Lake
+                image: 'https://images.unsplash.com/photo-1596707328599-28c0c1969a59?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.7,
                 safety: 97,
                 crowd: 'Moderate',
@@ -106,7 +114,7 @@ heritage: [
                 id: 8,
                 name: 'Pondicherry',
                 title: 'French Riviera of the East',
-                image: 'https://images.unsplash.com/photo-1582915293040-349929235d25?q=80&w=2670&auto=format&fit=crop', // Promenade
+                image: 'https://images.unsplash.com/photo-1582915293040-349929235d25?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.7,
                 safety: 92,
                 crowd: 'High',
@@ -118,7 +126,7 @@ heritage: [
                 id: 9,
                 name: 'Kanyakumari',
                 title: 'Tip of India',
-                image: 'https://images.unsplash.com/photo-1598322634336-d446927d3536?q=80&w=2670&auto=format&fit=crop', // Thiruvalluvar Statue
+                image: 'https://images.unsplash.com/photo-1598322634336-d446927d3536?q=80&w=2670&auto=format&fit=crop',
                 rating: 4.6,
                 safety: 93,
                 crowd: 'Very High',
@@ -130,29 +138,73 @@ heritage: [
     };
 
     return (
-        <div className="min-h-screen bg-bg-dark text-white pt-24 pb-12 relative overflow-hidden">
-            {/* Background Gradients */}
-            <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-vibrant-blue/20 to-transparent -z-10 blur-3xl" />
+        <div className="min-h-screen bg-transparent text-white pt-24 pb-12 relative overflow-hidden cursor-none">
+            <CustomCursor />
+            <ParticleBackground />
 
-            <div className="container mx-auto px-6">
+            {/* THE GOLDEN FRAME */}
+            <div className="fixed inset-4 border-2 border-vibrant-gold/20 rounded-3xl pointer-events-none z-[50]" />
+            <div className="fixed top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-vibrant-gold/40 z-[50]" />
+            <div className="fixed top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-vibrant-gold/40 z-[50]" />
+            <div className="fixed bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-vibrant-gold/40 z-[50]" />
+            <div className="fixed bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-vibrant-gold/40 z-[50]" />
+
+            {/* HERO PARALLAX BACKGROUND */}
+            <motion.div 
+                style={{ y: yHero, opacity: opacityHero }}
+                className="absolute top-0 left-0 w-full h-[600px] -z-10"
+            >
+                <img 
+                    src="https://images.unsplash.com/photo-1621327017866-26795b87702f?q=80&w=2670&auto=format&fit=crop" 
+                    alt="Background" 
+                    className="w-full h-full object-cover opacity-30"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-dark/50 to-bg-dark" />
+            </motion.div>
+
+            <div className="container mx-auto px-6 relative z-10">
 
                 {/* Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    style={{ y: yText }}
+                    initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
                     className="text-center mb-16"
                 >
-                    <span className="text-vibrant-gold font-bold uppercase tracking-[0.3em] text-xs block mb-4 glow-text">Discover Tamil Nadu</span>
-                    <h1 className="font-heading text-5xl md:text-7xl font-bold mb-6">
+                    <motion.span 
+                        initial={{ opacity: 0, tracking: '0.1em' }}
+                        animate={{ opacity: 1, tracking: '0.3em' }}
+                        transition={{ duration: 1, delay: 0.2 }}
+                        className="text-vibrant-gold font-bold uppercase text-xs block mb-4 glow-text"
+                    >
+                        Discover Tamil Nadu
+                    </motion.span>
+                    <motion.h1 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1 }}
+                        className="font-heading text-5xl md:text-7xl font-bold mb-6 text-glow-gold"
+                    >
                         Explore by <span className="text-transparent bg-clip-text bg-gradient-to-r from-vibrant-pink to-vibrant-gold">Category</span>
-                    </h1>
-                    <p className="text-white/60 text-lg max-w-2xl mx-auto font-light">
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className="text-white/60 text-lg max-w-2xl mx-auto font-light"
+                    >
                         From the sacred chants of ancient temples to the silent whispers of misty hills, find a destination that resonates with your soul.
-                    </p>
+                    </motion.p>
                 </motion.div>
 
                 {/* Tab Navigation */}
-                <div className="flex flex-wrap justify-center gap-4 mb-16">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="flex flex-wrap justify-center gap-4 mb-16"
+                >
                     {categories.map((cat) => (
                         <button
                             key={cat.id}
@@ -173,7 +225,7 @@ heritage: [
                             </div>
                         </button>
                     ))}
-                </div>
+                </motion.div>
 
                 {/* Destination Grid */}
                 <motion.div

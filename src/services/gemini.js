@@ -6,12 +6,13 @@ import axios from 'axios';
 export const generateItinerary = async (destination, travelers, budget, interests, duration) => {
   try {
     // Call the new FastAPI Production Backend
-    const response = await axios.post('http://localhost:8000/itinerary/generate', {
+    const response = await axios.post('http://localhost:8000/api/itinerary/generate', {
       destination,
       travelers,
       budget,
       interests: interests || ['General sightseeing'],
-      days: duration || 3
+      days: duration || 3,
+      travel_style: 'balanced'
     });
 
     const data = response.data;
@@ -74,6 +75,21 @@ const generateMockData = (destination, duration) => {
   const days = [];
 
   const mockPlaces = {
+    'Chennai': {
+      activities: [
+        { title: 'Kapaleeshwarar Temple', type: 'visit', rating: '4.8', cost: 'Free', lat: 13.0333, lng: 80.2693 },
+        { title: 'San Thome Cathedral', type: 'visit', rating: '4.7', cost: 'Free', lat: 13.0340, lng: 80.2786 },
+        { title: 'Marina Beach', type: 'visit', rating: '4.6', cost: 'Free', lat: 13.0500, lng: 80.2824 },
+        { title: 'Fort St. George', type: 'visit', rating: '4.5', cost: '₹100', lat: 13.0802, lng: 80.2868 },
+        { title: 'Ratna Cafe', type: 'food', rating: '4.4', cost: '₹200', lat: 13.0604, lng: 80.2785 },
+      ],
+      hotel: { name: 'ITC Grand Chola', rating: '4.9', priceRange: '₹15000-25000/night' },
+      restaurants: [
+        { name: 'Ratna Cafe', cuisine: 'South Indian', rating: '4.4', mustTry: 'Sambar Idli' },
+        { name: 'Saravana Bhavan', cuisine: 'South Indian', rating: '4.2', mustTry: 'Mini Tiffin' },
+      ],
+      center: { lat: 13.0475, lng: 80.2707 }
+    },
     'Madurai': {
       activities: [
         { title: 'Meenakshi Amman Temple', type: 'visit', rating: '4.8', cost: 'Free', lat: 9.9195, lng: 78.1190 },
@@ -112,7 +128,7 @@ const generateMockData = (destination, duration) => {
         time: `${9 + j * 2}:00`,
         title: act.title,
         description: `Rated ${act.rating}★ on Google Maps`,
-        location: { lat: act.lat + (i * 0.005), lng: act.lng + (i * 0.005) },
+        location: { lat: act.lat + (i * 0.001), lng: act.lng + (i * 0.001) },
         type: act.type,
         cost: act.cost,
         rating: act.rating,
@@ -145,3 +161,4 @@ const generateMockData = (destination, duration) => {
     }
   };
 };
+
